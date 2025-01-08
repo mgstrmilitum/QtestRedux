@@ -69,7 +69,7 @@ public class playerController : MonoBehaviour
     void Sprint()
     {
         //WHY DOES HOLDING SPRINT IN AIR CAUSE MOVEMENT FREEZE?
-        if(Input.GetButtonDown("Sprint") && controller.isGrounded)
+        if(Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
             isSprinting = true;
