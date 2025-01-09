@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-public class playerController : MonoBehaviour
+public class playerController : MonoBehaviour, IDamage
 {
     [SerializeField] CharacterController controller;
     [SerializeField] LayerMask ignoreMask;
@@ -9,21 +10,27 @@ public class playerController : MonoBehaviour
     [SerializeField] int jumpMax;
     [SerializeField] int jumpSpeed;
     [SerializeField] int gravity;
-
+    [SerializeField] int health;
     [SerializeField] int shootDamage;
     [SerializeField] int shootDistance;
+    [SerializeField] int jumpSpeedMod;
+
 
     int jumpCount = 0;
+    int hpOriginal;
 
     Vector3 moveDirection;
     Vector3 playerVelocity;
 
     bool isSprinting = false;
+    bool justJumped = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        hpOriginal = health;
+        UpdatePlayerUI();
     }
 
     // Update is called once per frame
@@ -96,5 +103,29 @@ public class playerController : MonoBehaviour
         }
 
         //Do feedback as quickly as you can!
+    }
+
+    public void TakeDamage(int amount)
+    {
+        health -= amount;
+        UpdatePlayerUI();
+
+        StartCoroutine(FlashDamagePanel());
+        if(health <= 0)
+        {
+            GameManager.Instance.YouLose();
+        }
+    }
+
+    IEnumerator FlashDamagePanel()
+    {
+        GameManager.Instance.damagePanel.SetActive(true);
+        yield return new WaitForSeconds(.1f);
+        GameManager.Instance.damagePanel.SetActive(false);
+    }
+
+    void UpdatePlayerUI()
+    {
+        GameManager.Instance.playerHealthBar.fillAmount = (float)health / hpOriginal;
     }
 }
