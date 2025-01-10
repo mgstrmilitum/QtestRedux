@@ -7,6 +7,7 @@ public class playerController : MonoBehaviour, IDamage
     [SerializeField] LayerMask ignoreMask;
     [SerializeField] int speed;
     [SerializeField] int sprintMod;
+    [SerializeField] int crouchMod;
     [SerializeField] int jumpMax;
     [SerializeField] int jumpSpeed;
     [SerializeField] int gravity;
@@ -38,7 +39,7 @@ public class playerController : MonoBehaviour, IDamage
     {
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.blue);
         Movement();
-        Sprint();
+        Crouch();
     }
 
     void Movement()
@@ -76,14 +77,28 @@ public class playerController : MonoBehaviour, IDamage
     void Sprint()
     {
         //WHY DOES HOLDING SPRINT IN AIR CAUSE MOVEMENT FREEZE?
-        if(Input.GetButtonDown("Sprint"))
+        //if(Input.GetButtonDown("Sprint"))
+        //{
+        //    speed *= sprintMod;
+        //    isSprinting = true;
+        //}
+        //else if (Input.GetButtonUp("Sprint"))
+        //{
+        //    speed /= sprintMod;
+        //    isSprinting = false;
+        //}
+    }
+
+    void Crouch()
+    {
+        if (Input.GetButtonDown("Sprint"))
         {
-            speed *= sprintMod;
+            speed /= crouchMod;
             isSprinting = true;
         }
         else if (Input.GetButtonUp("Sprint"))
         {
-            speed /= sprintMod;
+            speed *= crouchMod;
             isSprinting = false;
         }
     }
@@ -127,5 +142,10 @@ public class playerController : MonoBehaviour, IDamage
     void UpdatePlayerUI()
     {
         GameManager.Instance.playerHealthBar.fillAmount = (float)health / hpOriginal;
+    }
+
+    IEnumerator QuickJump()
+    {
+        yield return new WaitForSeconds(.05f);
     }
 }
