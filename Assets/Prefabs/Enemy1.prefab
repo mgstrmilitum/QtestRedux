@@ -793,7 +793,7 @@ MonoBehaviour:
   faceTargetSpeed: 8
   shotPosition: {fileID: 1672123395022164023}
   bullet: {fileID: 6299318728652817414, guid: 6024002c8df893b49b98e4b41b118439, type: 3}
-  rateOfFire: 1
+  rateOfFire: 1.5
 --- !u!195 &7521096368958418817
 NavMeshAgent:
   m_ObjectHideFlags: 0

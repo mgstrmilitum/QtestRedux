@@ -16,8 +16,10 @@ public class EnemyAI : MonoBehaviour, IDamage
     Color origColor;
     bool isShooting;
     bool playerInRange;
+    bool enemyInRange;
 
     Vector3 playerDirection;
+    Vector3 enemyDirection;
 
     // Start is called before the first frame update
     void Start()
@@ -31,10 +33,28 @@ public class EnemyAI : MonoBehaviour, IDamage
     {
         if (playerInRange)
         {
-            playerDirection = GameManager.Instance.player.transform.position - transform.position;
+            enemyDirection = GameManager.Instance.player.transform.position - transform.position;
             agent.SetDestination(GameManager.Instance.player.transform.position);
 
             if(agent.remainingDistance <= agent.stoppingDistance)
+            {
+                FaceTarget();
+            }
+
+            if (!isShooting)
+            {
+                StartCoroutine(Shoot());
+            }
+        }
+
+
+        if (enemyInRange)
+        {
+            //Probs gotta tune gameManager to be able to recognize an enemy.
+            playerDirection = GameManager.Instance.player.transform.position - transform.position;
+            agent.SetDestination(GameManager.Instance.player.transform.position);
+
+            if (agent.remainingDistance <= agent.stoppingDistance)
             {
                 FaceTarget();
             }
@@ -52,6 +72,11 @@ public class EnemyAI : MonoBehaviour, IDamage
         {
             playerInRange = true;
         }
+
+        if (other.CompareTag("Enemy"))
+        {
+            enemyInRange = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -59,6 +84,11 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (other.CompareTag("Player"))
         {
             playerInRange = false;
+        }
+
+        if (other.CompareTag("Enemy"))
+        {
+            enemyInRange = false;
         }
     }
 
