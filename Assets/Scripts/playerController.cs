@@ -1,5 +1,7 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+
 
 public class playerController : MonoBehaviour, IDamage
 {
@@ -10,21 +12,27 @@ public class playerController : MonoBehaviour, IDamage
     [SerializeField] int crouchMod;
     [SerializeField] int jumpMax;
     [SerializeField] int jumpSpeed;
+    [SerializeField] float timeForJumpBoost;
     [SerializeField] int gravity;
     [SerializeField] int health;
     [SerializeField] int shootDamage;
     [SerializeField] int shootDistance;
     [SerializeField] int jumpSpeedMod;
+    [SerializeField] Rigidbody rb;
+    [SerializeField] Transform playerCenter;
+    [SerializeField] float groundingDistance;
 
-
-    int jumpCount = 0;
+    [SerializeField]int jumpCount = 0;
     int hpOriginal;
+    float timeGrounded = 0f;
 
-    Vector3 moveDirection;
-    Vector3 playerVelocity;
+    public LayerMask groundLayer;
+    public Vector3 moveDirection;
+    public Vector3 playerVelocity;
 
     bool isSprinting = false;
-    bool justJumped = false;
+    bool justLanded = false;
+    public bool isLanded = false;
 
 
     // Start is called before the first frame update
@@ -42,23 +50,61 @@ public class playerController : MonoBehaviour, IDamage
         Crouch();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        //if (other.CompareTag("Floor"))
+        //{
+        //    jumpCount = 0;
+        //    playerVelocity.y = 0f;
+        //    timeGrounded = 0f;
+        //    isLanded = true;
+        //}
+    }
+
+    private void OnTrigger(Collider other)
+    {
+        if(other.CompareTag("Floor"))
+        {
+            timeGrounded += Time.deltaTime;
+        }
+    }
+
     void Movement()
     {
-        if(controller.isGrounded)
-        {
-            jumpCount = 0;
-            playerVelocity = Vector3.zero;
-        }
+        //if (controller.isGrounded)
+        //{
+        //    jumpCount = 0;
+        //    playerVelocity = Vector3.zero;
+        //    //timeGrounded = 0f;
+        //}
 
+        timeGrounded += Time.deltaTime;
         //moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         moveDirection = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
-        controller.Move(moveDirection * speed * Time.deltaTime);
+
+        //controller.Move(moveDirection * speed * Time.deltaTime);
+        //rb.AddForceAtPosition(moveDirection * speed * Time.deltaTime, playerCenter.position, ForceMode.Force);
+        rb.linearVelocity = moveDirection * speed;
+
+        //if (timeGrounded <= timeForJumpBoost)
+        //{
+        //    justLanded = true;
+        //    //StartCoroutine(QuickJump());
+        //}
+        //else
+        //{
+        //    Jump();
+        //}
 
         Jump();
-
-        controller.Move(playerVelocity * Time.deltaTime);
-        playerVelocity.y -= gravity * Time.deltaTime;
-
+        //controller.Move(playerVelocity * Time.deltaTime);
+        float yVelo = rb.linearVelocity.y;
+        yVelo -= gravity * Time.deltaTime;
+        if (!isLanded)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, yVelo, rb.linearVelocity.z);
+        }
+        rb.angularVelocity = Vector3.zero;
         if(Input.GetButtonDown("Fire1"))
         {
             Shoot();
@@ -67,10 +113,24 @@ public class playerController : MonoBehaviour, IDamage
 
     void Jump()
     {
-        if(Input.GetButtonDown("Jump") && jumpCount < jumpMax)
+        RaycastHit hit;
+        if(Physics.Raycast(playerCenter.position, Vector3.down, out hit, groundingDistance))
+        {
+            if(hit.collider.CompareTag("Floor"))
+            {
+                isLanded = true;
+                jumpCount = 0;
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+                Debug.Log("Touching the ground!");
+            }
+        }
+
+        if(isLanded && Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
             ++jumpCount;
-            playerVelocity.y = jumpSpeed;
+            isLanded = false;
+            rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
+            //rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpSpeed, rb.linearVelocity.z);
         }
     }
 
@@ -146,6 +206,22 @@ public class playerController : MonoBehaviour, IDamage
 
     IEnumerator QuickJump()
     {
-        yield return new WaitForSeconds(.05f);
+        if (Input.GetButtonDown("Jump") && jumpCount < jumpMax && justLanded == true)
+        {
+            ++jumpCount;
+            playerVelocity.y = jumpSpeed * jumpSpeedMod;
+        }
+        justLanded = false;
+        yield return new WaitForSeconds(timeForJumpBoost);
+    }
+
+    IEnumerator AccelMovement()
+    {
+        yield return null;
+    }
+
+    IEnumerator DecelMovement()
+    {
+        yield return null;
     }
 }
