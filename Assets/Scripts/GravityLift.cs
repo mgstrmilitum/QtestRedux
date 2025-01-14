@@ -23,7 +23,8 @@ public class GravityLift : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            other.GetComponent<CharacterController>().Move(liftDirection * forceMagnitude * Time.deltaTime);
+            //other.GetComponent<CharacterController>().Move(liftDirection * forceMagnitude * Time.deltaTime);
+            other.GetComponent<Rigidbody>().linearVelocity = Vector3.up * forceMagnitude;
         }
     }
 }
