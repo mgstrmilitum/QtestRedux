@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,13 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     Vector3 playerDirection;
     Vector3 enemyDirection;
+
+    // Roaming
+    public Vector3 walkPoint;
+    bool walkPointSet;
+    public float rangeToWalkPoint;
+    LayerMask ground;
+
 
     // Start is called before the first frame update
     void Start()
@@ -76,6 +84,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (other.CompareTag("Enemy"))
         {
             enemyInRange = true;
+            Destroy(gameObject);
         }
     }
 
@@ -114,7 +123,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     {
         model.material.color = Color.red;
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.15f);
 
         model.material.color = origColor;
     }
@@ -125,5 +134,30 @@ public class EnemyAI : MonoBehaviour, IDamage
         Instantiate(bullet, shotPosition.position, transform.rotation);
         yield return new WaitForSeconds(rateOfFire);
         isShooting = false;
+    }
+
+    public void Roam()
+    {
+        if (!walkPointSet) SearchForWalkPoint();
+
+        if (walkPointSet)
+            agent.SetDestination(walkPoint);
+
+        Vector3 distanceToWalkPoint = transform.position - walkPoint;
+
+        if (distanceToWalkPoint.magnitude <= 1f)
+            walkPointSet = false;
+
+    }  
+
+    private void SearchForWalkPoint()
+    {
+        float randX = UnityEngine.Random.Range(-rangeToWalkPoint, rangeToWalkPoint);
+        float randZ = UnityEngine.Random.Range(-rangeToWalkPoint, rangeToWalkPoint);
+
+        walkPoint = new Vector3(transform.position.x + randX, transform.position.y, transform.position.z + randZ);
+
+        if (Physics.Raycast(walkPoint, -transform.up, 2f, ground))
+            walkPointSet = true;
     }
 }
