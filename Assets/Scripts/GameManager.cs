@@ -1,0 +1,87 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class GameManager : MonoBehaviour
+{
+    public static GameManager Instance;
+    [SerializeField] GameObject menuPause;
+    [SerializeField] GameObject menuWin;
+    [SerializeField] GameObject menuLose;
+    [SerializeField] GameObject menuActive;
+
+    public Image playerHealthBar;
+    public GameObject damagePanel;
+
+    public GameObject player;
+    public playerController playerScript;
+
+    public bool isPaused;
+    int goalCount;
+
+    // Start is called before the first frame update
+    void Awake()
+    {
+        Instance = this;
+        player = GameObject.FindWithTag("Player");
+        playerScript = player.GetComponent<playerController>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            if (menuActive == null)
+            {
+                StatePause();
+                menuActive = menuPause;
+                menuActive.SetActive(isPaused);
+            }
+            else if(menuActive == menuPause)
+            {
+                StateUnpause();
+            }
+        }
+    }
+
+    public void StatePause()
+    {
+        isPaused = !isPaused;
+        Time.timeScale = 0f;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
+    }
+
+    public void StateUnpause()
+    {
+        isPaused = !isPaused;
+        Time.timeScale = 1f;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        menuActive.SetActive(false);
+        menuActive = null;
+    }
+
+    public void UpdateGameGoal(int _amount)
+    {
+        goalCount += _amount;
+
+        //YOU WIN!!!
+        if (goalCount <= 0)
+        {
+            StatePause();
+            menuActive = menuWin;
+            menuActive.SetActive(true);
+        }
+    }
+
+    public void YouLose()
+    {
+        StatePause();
+        menuActive = menuLose;
+        menuActive.SetActive(true);
+        //THINK ABOUT CONDENSING THESE FUNCTIONS
+    }
+}
