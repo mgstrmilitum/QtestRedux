@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<playerController>();
+
+        Time.timeScale = 1f;
     }
 
     // Update is called once per frame

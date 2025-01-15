@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
+
+
 struct Cmd
 {
     public float forwardMove;
@@ -48,6 +51,9 @@ public class QMove : MonoBehaviour
     [SerializeField] float jumpSpeed = 8f;
     [SerializeField] bool holdJumpToBhop = false;
     [SerializeField] float playerFriction = 0f;
+
+
+
     //camera rotations
     float rotX;
     float rotY;
