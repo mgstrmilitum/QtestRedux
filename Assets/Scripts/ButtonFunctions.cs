@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class ButtonFunctions : MonoBehaviour
 {
+    string sceneName;
+
     public void Resume()
     {
         GameManager.Instance.StateUnpause();
@@ -12,7 +14,9 @@ public class ButtonFunctions : MonoBehaviour
 
     public void RestartLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        sceneName = SceneManager.GetActiveScene().name;
+
+        SceneManager.LoadSceneAsync(sceneName);
         GameManager.Instance.StateUnpause();
     }
 
