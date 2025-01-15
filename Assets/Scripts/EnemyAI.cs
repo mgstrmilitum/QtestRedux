@@ -9,9 +9,15 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] Renderer model;
     [SerializeField] int health;
     [SerializeField] int faceTargetSpeed;
-    [SerializeField] Transform shotPosition;
+    [SerializeField] Transform shootPos, headPos;
     [SerializeField] GameObject bullet;
     [SerializeField] float rateOfFire;
+    [SerializeField] int FOV;
+    [SerializeField] Animator anim;
+    [SerializeField] int animSpeedTrans;
+
+
+    float angleToPlayer;
 
     Color origColor;
     bool isShooting;
@@ -29,21 +35,46 @@ public class EnemyAI : MonoBehaviour, IDamage
     // Update is called once per frame
     void Update()
     {
-        if (playerInRange)
+        float agentSpeed = agent.velocity.normalized.magnitude;
+        float animSpeed = anim.GetFloat("Speed");
+
+
+        anim.SetFloat("Speed", Mathf.MoveTowards(animSpeed, agentSpeed, Time.deltaTime * animSpeedTrans));
+
+        if (playerInRange && canSeePlayer())
         {
-            playerDirection = GameManager.Instance.player.transform.position - transform.position;
-            agent.SetDestination(GameManager.Instance.player.transform.position);
+            
+        }
+    }
 
-            if(agent.remainingDistance <= agent.stoppingDistance)
-            {
-                FaceTarget();
-            }
+    bool canSeePlayer()
+    {
+        playerDirection = GameManager.Instance.player.transform.position - headPos.position;
+        angleToPlayer = Vector3.Angle(playerDirection, transform.forward);
+        
+        Debug.DrawRay(headPos.position, playerDirection);
 
-            if (!isShooting)
+        RaycastHit hit;
+        if(Physics.Raycast(headPos.position, playerDirection, out hit))
+        {
+            if(hit.collider.CompareTag("Player") && angleToPlayer <= FOV)
             {
-                StartCoroutine(Shoot());
+                agent.SetDestination(GameManager.Instance.player.transform.position);
+
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    FaceTarget();
+                }
+
+                if (!isShooting)
+                {
+                    StartCoroutine(Shoot());
+                }
+                return true;
             }
         }
+
+        return false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -64,7 +95,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     void FaceTarget()
     {
-        Quaternion rot = Quaternion.LookRotation(playerDirection);
+        Quaternion rot = Quaternion.LookRotation(new Vector3(playerDirection.x, 0, playerDirection.z));
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
     }
 
@@ -92,7 +123,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     IEnumerator Shoot()
     {
         isShooting = true;
-        Instantiate(bullet, shotPosition.position, transform.rotation);
+        Instantiate(bullet, shootPos.position, transform.rotation);
         yield return new WaitForSeconds(rateOfFire);
         isShooting = false;
     }

@@ -138,8 +138,8 @@ Transform:
   m_GameObject: {fileID: 5676446360488539732}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 31.1, y: 1, z: -7.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 31.1, y: 1.25, z: -7.5}
+  m_LocalScale: {x: 1, y: 1.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5667124448191387556}
@@ -239,11 +239,11 @@ MonoBehaviour:
   ignoreMask:
     serializedVersion: 2
     m_Bits: 8
-  speed: 4
-  sprintMod: 10
+  speed: 7
+  sprintMod: 15
   jumpMax: 1
-  jumpSpeed: 3
-  gravity: 5
+  jumpSpeed: 1
+  gravity: 1
   health: 3
   shootDamage: 1
   shootDistance: 3
