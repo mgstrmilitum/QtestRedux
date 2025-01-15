@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-public class playerController : MonoBehaviour
+public class playerController : MonoBehaviour, IDamage
 {
     [SerializeField] CharacterController controller;
     [SerializeField] LayerMask ignoreMask;
@@ -9,24 +10,20 @@ public class playerController : MonoBehaviour
     [SerializeField] int jumpMax;
     [SerializeField] int jumpSpeed;
     [SerializeField] int gravity;
-<<<<<<< Updated upstream
-
-=======
     [SerializeField] int health;
     [SerializeField] bool shieldActive;
     [SerializeField] int maxShield,currentShield;
->>>>>>> Stashed changes
     [SerializeField] int shootDamage;
     [SerializeField] int shootDistance;
+    [SerializeField] int jumpSpeedMod;
+
 
     int jumpCount = 0;
+    int hpOriginal;
 
     Vector3 moveDirection;
     Vector3 playerVelocity;
 
-<<<<<<< Updated upstream
-    bool isSprinting = false;
-=======
     //bool isSprinting = false;
     //bool justJumped = false;
 
@@ -35,30 +32,20 @@ public class playerController : MonoBehaviour
     public float reloadTime = 1f;
     private bool isReloading;
 
->>>>>>> Stashed changes
 
     // Start is called before the first frame update
     void Start()
     {
-<<<<<<< Updated upstream
-        
-=======
         hpOriginal = health;
         currentShield = maxShield;
         UpdatePlayerUI();
         currentAmmo = maxAmmo;
->>>>>>> Stashed changes
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        //if(currentAmmo <= 0)
-        //{
-        //    StartCoroutine(Reload());
-            
-        //}
+        ShieldBehavior();
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.blue);
         Movement();
         Sprint();
@@ -98,13 +85,8 @@ public class playerController : MonoBehaviour
 
     void Sprint()
     {
-<<<<<<< Updated upstream
-        //WHY DOES HOLDING SPRINT IN AIR CAUSE MOVEMENT FREEZE?
-        if(Input.GetButtonDown("Sprint") && controller.isGrounded)
-=======
       
         if(Input.GetButtonDown("Sprint"))
->>>>>>> Stashed changes
         {
             speed *= sprintMod;
             //isSprinting = true;
@@ -141,8 +123,6 @@ public class playerController : MonoBehaviour
         currentAmmo = maxAmmo;
         yield return new WaitForSeconds(reloadTime);
     }
-<<<<<<< Updated upstream
-=======
 
     public void TakeDamage(int amount)
     {
@@ -186,5 +166,19 @@ public class playerController : MonoBehaviour
         shieldActive = false;
     }
 
->>>>>>> Stashed changes
+    void ShieldBehavior()
+    {
+        if(currentShield < 0){currentShield = 0;}
+        if(currentShield > maxShield) { currentShield = maxShield;}
+
+    }
+
+    public void AddShield(int amount)
+    {
+        if(currentShield < maxShield)
+        {
+            currentShield += amount;
+            UpdatePlayerUI();
+        }
+    }
 }
