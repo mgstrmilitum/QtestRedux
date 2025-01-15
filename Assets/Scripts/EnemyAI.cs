@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static Photon.Pun.UtilityScripts.PunTeams;
 
 public class EnemyAI : MonoBehaviour, IDamage
 {
@@ -13,6 +14,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] Transform shotPosition;
     [SerializeField] GameObject bullet;
     [SerializeField] float rateOfFire;
+    [SerializeField] int team;
 
     Color origColor;
     bool isShooting;
@@ -32,6 +34,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     // Start is called before the first frame update
     void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
         origColor = model.material.color;
         GameManager.Instance.UpdateGameGoal(1);
     }
@@ -41,50 +44,57 @@ public class EnemyAI : MonoBehaviour, IDamage
     {
         if (playerInRange)
         {
-            enemyDirection = GameManager.Instance.player.transform.position - transform.position;
-            agent.SetDestination(GameManager.Instance.player.transform.position);
+            enemyDirection = GameManager.Instance.player.transform.position;
 
-            if(agent.remainingDistance <= agent.stoppingDistance)
-            {
-                FaceTarget();
-            }
+            //if (agent.remainingDistance <= agent.stoppingDistance)
+            //{
+            //    FaceTarget();
+            //}
 
-            if (!isShooting)
-            {
-                StartCoroutine(Shoot());
-            }
+            //if (!isShooting)
+            //{
+            //    StartCoroutine(Shoot());
+            //}
+
+            TargetPlayerOrEnemy();
         }
-
-
-        if (enemyInRange)
+        else if (enemyInRange)
         {
+            enemyDirection = GameManager.Instance.player.transform.position;
+
             //Probs gotta tune gameManager to be able to recognize an enemy.
-            playerDirection = GameManager.Instance.player.transform.position - transform.position;
-            agent.SetDestination(GameManager.Instance.player.transform.position);
+            //playerDirection = GameManager.Instance.player.transform.position - transform.position;
 
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                FaceTarget();
-            }
+            //agent.SetDestination(GameManager.Instance.player.transform.position);
 
-            if (!isShooting)
-            {
-                StartCoroutine(Shoot());
-            }
+            //if (agent.remainingDistance <= agent.stoppingDistance)
+            //{
+            //    FaceTarget();
+            //}
+
+            //if (!isShooting)
+            //{
+            //    StartCoroutine(Shoot());
+            //}
+
+            TargetPlayerOrEnemy();
         }
+        //else
+        //{
+        //    Roam();
+        //}
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             playerInRange = true;
         }
-
-        if (other.CompareTag("Enemy"))
+        else if (other.CompareTag("Enemy"))
         {
-            enemyInRange = true;
-            Destroy(gameObject);
+            EnemyAI otherEnemy = other.GetComponent<EnemyAI>();
+            if (otherEnemy != null && otherEnemy.team != team) { enemyInRange = true; }
         }
     }
 
@@ -94,10 +104,10 @@ public class EnemyAI : MonoBehaviour, IDamage
         {
             playerInRange = false;
         }
-
-        if (other.CompareTag("Enemy"))
+        else if (other.CompareTag("Enemy"))
         {
-            enemyInRange = false;
+            EnemyAI otherEnemy = other.GetComponent<EnemyAI>();
+            if (otherEnemy != null && otherEnemy.team != team) { enemyInRange = false; }
         }
     }
 
@@ -148,7 +158,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (distanceToWalkPoint.magnitude <= 1f)
             walkPointSet = false;
 
-    }  
+    }
 
     private void SearchForWalkPoint()
     {
@@ -159,5 +169,20 @@ public class EnemyAI : MonoBehaviour, IDamage
 
         if (Physics.Raycast(walkPoint, -transform.up, 2f, ground))
             walkPointSet = true;
+    }
+
+    private void TargetPlayerOrEnemy()
+    {
+        agent.SetDestination(enemyDirection - transform.position);
+
+        if (agent.remainingDistance <= agent.stoppingDistance)
+        {
+            FaceTarget();
+        }
+
+        if (!isShooting)
+        {
+            StartCoroutine(Shoot());
+        }
     }
 }
