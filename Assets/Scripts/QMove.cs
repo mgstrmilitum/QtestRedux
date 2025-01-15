@@ -32,10 +32,13 @@ struct AmmoCount
 
 }
 
-public class QMove : MonoBehaviour
+public class QMove : MonoBehaviour, IDamage
 {
     public CharacterController controller;
     [SerializeField] Transform playerView;
+    [SerializeField] int health;
+    [SerializeField] bool shieldActive;
+    [SerializeField] int maxShield,currentShield;
     [SerializeField] float gravity = 20f;
     [SerializeField] float friction = 6f;
     [SerializeField] float xMouseSensitivity = 30f;
@@ -53,6 +56,7 @@ public class QMove : MonoBehaviour
     [SerializeField] float playerFriction = 0f;
 
 
+    int originalHealth;
 
     //camera rotations
     float rotX;
@@ -78,9 +82,16 @@ public class QMove : MonoBehaviour
 
     //Player commands, stores wish commands player requests (forward/back, left/right, jump, etc)
     Cmd cmd;
-
+    void Start()
+    {
+        originalHealth = health;
+        currentShield = maxShield;
+        UpdatePlayerUI();
+    }
     void Update()
     {
+        ShieldBehavior();
+
         rotX -= Input.GetAxisRaw("Mouse Y") * xMouseSensitivity;
         rotY += Input.GetAxisRaw("Mouse X") * yMouseSensitivity;
 
@@ -318,35 +329,50 @@ public class QMove : MonoBehaviour
         GameManager.Instance.damagePanel.SetActive(false);
     }
 
+    public void TakeDamage(int amount)
+    {
+        if (shieldActive)
+        {
+            currentShield -= amount;
+            if (currentShield <= 0)
+            {
+                DeactivateShield();
+            }
+            UpdatePlayerUI();
+            return;
+        }
 
-    //private Vector3 Accelerate(Vector3 accelDir, Vector3 prevVelocity, float accelerate, float maxVelo)
-    //{
-    //    float projVelo = Vector3.Dot(prevVelocity, accelDir);
-    //    float accelVelo = accelerate * Time.fixedDeltaTime;
+        health -= amount;
+        UpdatePlayerUI();
 
-    //    if(projVelo + accelVelo > maxVelo)
-    //    {
-    //        accelVelo = maxVelo - projVelo;
-    //    }
 
-    //    return prevVelocity + accelDir * accelVelo;
-    //}
+        StartCoroutine(FlashDamagePanel());
+        if (health <= 0)
+        {
+            GameManager.Instance.YouLose();
+        }
+    }
+    void UpdatePlayerUI()
+    {
+        GameManager.Instance.playerHealthBar.fillAmount = (float)health / originalHealth;
+        GameManager.Instance.playerShieldBar.fillAmount = (float)currentShield / maxShield;
+    }
+    void DeactivateShield()
+    {
+        shieldActive = false;
+    }
+    void ShieldBehavior()
+    {
+        if (currentShield < 0) { currentShield = 0; }
+        if (currentShield > maxShield) { currentShield = maxShield; }
 
-    //private Vector3 MoveGround(Vector3 accelDir, Vector3 prevVelocity)
-    //{
-    //    float speed = prevVelocity.magnitude;
-
-    //    if(speed != 0)
-    //    {
-    //        float drop = speed * friction * Time.fixedDeltaTime;
-    //        prevVelocity *= Mathf.Max(speed - drop, 0) / speed;
-    //    }
-
-    //    return Accelerate(accelDir, prevVelocity, groundAccelerate, maxGroundVelo);
-    //}
-
-    //private Vector3 MoveAir(Vector3 accelDir, Vector3 prevVelocity)
-    //{
-    //    return Accelerate(accelDir, prevVelocity, airAccelerate, maxAirVelo);
-    //}
+    }
+    public void AddShield(int amount)
+    {
+        if (currentShield < maxShield)
+        {
+            currentShield += amount;
+            UpdatePlayerUI();
+        }
+    }
 }
