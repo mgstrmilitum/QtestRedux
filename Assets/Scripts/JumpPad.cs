@@ -42,7 +42,6 @@ public class JumpPad : MonoBehaviour
     private void Launch(Rigidbody key)
     {
        key.AddForce(transform.up * launchForce, LaunchMode);
-        key.GetComponent<playerController>().isLanded = false;
     }
 
     private void OnCollisionEnter(Collision collision)

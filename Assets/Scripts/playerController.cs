@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -15,12 +16,14 @@ public class playerController : MonoBehaviour, IDamage
     [SerializeField] float timeForJumpBoost;
     [SerializeField] int gravity;
     [SerializeField] int health;
+    [SerializeField] int armor;
     [SerializeField] int shootDamage;
     [SerializeField] int shootDistance;
     [SerializeField] int jumpSpeedMod;
     [SerializeField] Rigidbody rb;
     [SerializeField] Transform playerCenter;
     [SerializeField] float groundingDistance;
+    [SerializeField] Material mat;
 
     [SerializeField]int jumpCount = 0;
     int hpOriginal;
@@ -34,10 +37,16 @@ public class playerController : MonoBehaviour, IDamage
     bool justLanded = false;
     public bool isLanded = false;
 
+    bool hasQuad;
+    public bool hasInvis;
+
+    Color myColor;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        myColor = mat.color;
         hpOriginal = health;
         UpdatePlayerUI();
     }
@@ -48,10 +57,34 @@ public class playerController : MonoBehaviour, IDamage
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.blue);
         Movement();
         Crouch();
+        if(hasInvis)
+        {
+            StartCoroutine(Invisibility());
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        PowerUp powerUp = other.GetComponent<PowerUp>();
+        if (other.CompareTag("PowerUp"))
+        {
+            if(powerUp.powerType == PowerType.QuadDamage)
+            {
+                hasQuad = true;
+            }
+            else if(powerUp.powerType == PowerType.MegaHealth)
+            {
+                health += 100;
+            }
+            else if(powerUp.powerType == PowerType.Invis)
+            {
+                hasInvis = true;
+            }
+        }
+        else if(other.CompareTag("Wall"))
+        {
+
+        }
         //if (other.CompareTag("Floor"))
         //{
         //    jumpCount = 0;
@@ -68,9 +101,14 @@ public class playerController : MonoBehaviour, IDamage
             timeGrounded += Time.deltaTime;
         }
     }
+    private void OnTriggerExit(Collider other)
+    {
+        timeGrounded = 0f;
+    }
 
     void Movement()
     {
+        StartCoroutine(DecreaseMegaHealthArmor());
         //if (controller.isGrounded)
         //{
         //    jumpCount = 0;
@@ -223,5 +261,38 @@ public class playerController : MonoBehaviour, IDamage
     IEnumerator DecelMovement()
     {
         yield return null;
+    }
+
+    IEnumerator DecreaseMegaHealthArmor()
+    {
+        while(health > 100 || armor > 100)
+        {
+            if (health > 100)
+            {
+                --health;
+            }
+            if(armor > 100)
+            {
+                --armor;
+            }
+            yield return new WaitForSeconds(1f);
+        }
+        
+    }
+
+    IEnumerator Invisibility()
+    {
+        while (hasInvis)
+        {
+            mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, .15f);
+            yield return new WaitForSeconds(3f);
+            hasInvis = false;
+        }
+        mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 1f);
+    }
+
+    IEnumerator QuadDamage()
+    {
+        yield return new WaitForSeconds(0f);
     }
 }
