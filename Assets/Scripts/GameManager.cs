@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuActive;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] float songTimer;
+    [SerializeField] float songLength;
     
     [SerializeField] TMP_Text goalCountText;
     public Image playerHealthBar;
@@ -45,6 +48,13 @@ public class GameManager : MonoBehaviour
             {
                 StateUnpause();
             }
+        }
+
+        songTimer += Time.deltaTime;
+        if (songTimer > songLength)
+        {
+            audioSource.Play();
+            songTimer = 0;
         }
     }
 
