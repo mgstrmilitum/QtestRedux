@@ -37,7 +37,6 @@ public class QMove : MonoBehaviour, IDamage
     public CharacterController controller;
     [SerializeField] Transform playerView;
     [SerializeField] int health;
-    [SerializeField] bool shieldActive;
     [SerializeField] int maxShield,currentShield;
     [SerializeField] float gravity = 20f;
     [SerializeField] float friction = 6f;
@@ -57,7 +56,7 @@ public class QMove : MonoBehaviour, IDamage
 
 
     int originalHealth;
-
+    public bool shieldActive;
     //camera rotations
     float rotX;
     float rotY;
@@ -91,34 +90,36 @@ public class QMove : MonoBehaviour, IDamage
     void Update()
     {
         ShieldBehavior();
-
-        rotX -= Input.GetAxisRaw("Mouse Y") * xMouseSensitivity;
-        rotY += Input.GetAxisRaw("Mouse X") * yMouseSensitivity;
-
-        if(rotX < -90)
+        if (!GameManager.Instance.isPaused)
         {
-            rotX = -90;
-        }
-        else if(rotX > 90)
-        {
-            rotX = 90;
-        }
+            rotX -= Input.GetAxisRaw("Mouse Y") * xMouseSensitivity;
+            rotY += Input.GetAxisRaw("Mouse X") * yMouseSensitivity;
 
-        this.transform.rotation = Quaternion.Euler(0, rotY, 0);
-        playerView.rotation = Quaternion.Euler(rotX, rotY, 0);
+            if (rotX < -90)
+            {
+                rotX = -90;
+            }
+            else if (rotX > 90)
+            {
+                rotX = 90;
+            }
 
-        QueueJump();
+            this.transform.rotation = Quaternion.Euler(0, rotY, 0);
+            playerView.rotation = Quaternion.Euler(rotX, rotY, 0);
 
-        if(controller.isGrounded)
-        {
-            GroundMove();
+            QueueJump();
+
+            if (controller.isGrounded)
+            {
+                GroundMove();
+            }
+            else
+            {
+                AirMove();
+            }
+
+            controller.Move(playerVelocity * Time.deltaTime);
         }
-        else
-        {
-            AirMove();
-        }
-
-        controller.Move(playerVelocity * Time.deltaTime);
     }
 
     private void SetMovementDir()
@@ -363,6 +364,7 @@ public class QMove : MonoBehaviour, IDamage
     }
     void ShieldBehavior()
     {
+        if (currentShield != 0) { shieldActive = true;}
         if (currentShield < 0) { currentShield = 0; }
         if (currentShield > maxShield) { currentShield = maxShield; }
 
