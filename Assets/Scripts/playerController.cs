@@ -24,6 +24,8 @@ public class playerController : MonoBehaviour, IDamage
     [SerializeField] Transform playerCenter;
     [SerializeField] float groundingDistance;
     [SerializeField] Material mat;
+    
+    [SerializeField] int team;
 
     [SerializeField]int jumpCount = 0;
     int hpOriginal;
