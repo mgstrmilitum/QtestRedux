@@ -59,6 +59,9 @@ public class QMove : MonoBehaviour, IDamage
     [SerializeField] float playerTopVelocity = 0f;
     [SerializeField] int crouchSpeedFactor; //2 halves speed, 4 quarters speed, etc
     [SerializeField] float crouchScaleFactor; //how much character controller component is shrunk (1 halves character, .5 is 1/4th size, etc)
+    bool isSprinting = false;
+    [SerializeField] float sprintSpeedFactor; //2 doubles run speed, 4 quadruples, etc
+    bool isSliding = false;
 
 
     //health/shield info
@@ -273,6 +276,19 @@ public class QMove : MonoBehaviour, IDamage
 
         var wishspeed = wishdir.magnitude;
         wishspeed *= moveSpeed;
+
+        #region Sprint
+        if(Input.GetButton("Sprint"))
+        {
+            wishspeed *= sprintSpeedFactor;
+        }
+
+        if (Input.GetButtonUp("Sprint"))
+        {
+            wishspeed /= sprintSpeedFactor;
+        }
+
+        #endregion
 
         #region Crouch/Uncrouch
         if (Input.GetButton("Crouch"))
