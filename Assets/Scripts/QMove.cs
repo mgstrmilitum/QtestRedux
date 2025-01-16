@@ -34,10 +34,9 @@ struct AmmoCount
 
 public class QMove : MonoBehaviour, IDamage
 {
+    //movement/control related
     public CharacterController controller;
     [SerializeField] Transform playerView;
-    [SerializeField] int health;
-    [SerializeField] int maxShield,currentShield;
     [SerializeField] float gravity = 20f;
     [SerializeField] float friction = 6f;
     [SerializeField] float xMouseSensitivity = 30f;
@@ -54,17 +53,23 @@ public class QMove : MonoBehaviour, IDamage
     [SerializeField] bool holdJumpToBhop = false;
     [SerializeField] bool invertLook = false;
     [SerializeField] float playerFriction = 0f;
-
-
-    int originalHealth;
-    public bool shieldActive;
-    //camera rotations
-    float rotX;
-    float rotY;
-
+    public bool wishJump = false;
     Vector3 moveDirectionNorm = Vector3.zero;
     Vector3 playerVelocity = Vector3.zero;
     [SerializeField] float playerTopVelocity = 0f;
+    [SerializeField] int crouchSpeedFactor; //2 halves speed, 4 quarters speed, etc
+    [SerializeField] float crouchScaleFactor; //how much character controller component is shrunk (1 halves character, .5 is 1/4th size, etc)
+
+
+    //health/shield info
+    int originalHealth;
+    public bool shieldActive;
+    [SerializeField] int health;
+    [SerializeField] int maxShield, currentShield;
+
+    //camera rotations
+    float rotX;
+    float rotY;
 
     //dev mode variables
     int frameCount = 0;
@@ -73,10 +78,9 @@ public class QMove : MonoBehaviour, IDamage
     [SerializeField] float fpsDisplayRate = 4f;
     public GUIStyle style;
 
-    public bool wishJump = false;
-
     //Player commands, stores wish commands player requests (forward/back, left/right, jump, etc)
     Cmd cmd;
+
     void Start()
     {
         originalHealth = health;
@@ -269,6 +273,22 @@ public class QMove : MonoBehaviour, IDamage
 
         var wishspeed = wishdir.magnitude;
         wishspeed *= moveSpeed;
+
+        #region Crouch/Uncrouch
+        if (Input.GetButton("Crouch"))
+        {
+            wishspeed /= crouchSpeedFactor;
+            controller.height = crouchScaleFactor;
+            Debug.Log("Crouching!");
+
+        }
+        if (Input.GetButtonUp("Crouch"))
+        {
+            wishspeed *= crouchSpeedFactor;
+            controller.height = 2f;
+            Debug.Log("Standing again!");
+        }
+        #endregion
 
         Accelerate(wishdir, wishspeed, runAcceleration);
 
