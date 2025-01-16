@@ -52,6 +52,7 @@ public class QMove : MonoBehaviour, IDamage
     [SerializeField] float sideStrafeSpeed = 1f;
     [SerializeField] float jumpSpeed = 8f;
     [SerializeField] bool holdJumpToBhop = false;
+    [SerializeField] bool invertLook = false;
     [SerializeField] float playerFriction = 0f;
 
 
@@ -113,7 +114,14 @@ public class QMove : MonoBehaviour, IDamage
             }
 
             this.transform.rotation = Quaternion.Euler(0, rotY, 0);
-            playerView.rotation = Quaternion.Euler(rotX, rotY, 0);
+            if (invertLook)
+            {
+                playerView.rotation = Quaternion.Euler(-rotX, rotY, 0);
+            }
+            else
+            {
+                playerView.rotation = Quaternion.Euler(rotX, rotY, 0);
+            }
 
             QueueJump();
 
