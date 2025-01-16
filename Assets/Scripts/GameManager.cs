@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public playerController playerScript;
 
-    public bool isPaused;
+    public bool isPaused = false;
     int goalCount;
 
     // Start is called before the first frame update
@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
         playerScript = player.GetComponent<playerController>();
 
         Time.timeScale = 1f;
+        
     }
 
     // Update is called once per frame
