@@ -151,7 +151,6 @@ GameObject:
   - component: {fileID: 2445905331302951609}
   - component: {fileID: 1833261281373439880}
   - component: {fileID: 949947768090462536}
-  - component: {fileID: 6430708501658565223}
   - component: {fileID: 2825886691318395962}
   - component: {fileID: 1133816541214925000}
   - component: {fileID: 1722279610935275336}
@@ -258,46 +257,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &6430708501658565223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3238113880512642753}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a19a12bdd646a204196e4b785bef2ed1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controller: {fileID: 2445905331302951609}
-  ignoreMask:
-    serializedVersion: 2
-    m_Bits: 8
-  speed: 5
-  sprintMod: 10
-  crouchMod: 2
-  jumpMax: 1
-  jumpSpeed: 50
-  timeForJumpBoost: 0.5
-  gravity: 250
-  health: 3
-  armor: 0
-  shootDamage: 1
-  shootDistance: 3
-  jumpSpeedMod: 2
-  rb: {fileID: 0}
-  playerCenter: {fileID: 5997126246676285573}
-  groundingDistance: 1.1
-  mat: {fileID: 2100000, guid: 89cbbcb3524ca0448af5770068afb220, type: 2}
-  jumpCount: 0
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  moveDirection: {x: 0, y: 0, z: 0}
-  playerVelocity: {x: 0, y: 0, z: 0}
-  isLanded: 0
-  hasInvis: 1
 --- !u!136 &2825886691318395962
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -362,14 +321,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 2445905331302951609}
   playerView: {fileID: 1940071780379279629}
-  health: 0
-  shieldActive: 0
-  maxShield: 0
+  health: 100
+  maxShield: 100
   currentShield: 0
   gravity: 20
   friction: 6
-  xMouseSensitivity: 30
-  yMouseSensitivity: 30
+  xMouseSensitivity: 2
+  yMouseSensitivity: 2
   moveSpeed: 7
   runAcceleration: 14
   runDeacceleration: 10
@@ -381,6 +339,7 @@ MonoBehaviour:
   jumpSpeed: 8
   holdJumpToBhop: 0
   playerFriction: 1
+  shieldActive: 1
   playerTopVelocity: 10
   wishJump: 0
 --- !u!82 &-3733195145495670568

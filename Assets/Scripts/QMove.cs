@@ -65,17 +65,12 @@ public class QMove : MonoBehaviour, IDamage
     Vector3 playerVelocity = Vector3.zero;
     [SerializeField] float playerTopVelocity = 0f;
 
-    //float addspeed;
-    //float accelspeed;
-    //float currentspeed;
-    //float zspeed;
-    //float _speed;
-    //float dot;
-    //float k;
-    //float accel;
-    //float newspeed;
-    //float control;
-    //float drop;
+    //dev mode variables
+    int frameCount = 0;
+    float dt = 0f;
+    float fps = 0f;
+    [SerializeField] float fpsDisplayRate = 4f;
+    public GUIStyle style;
 
     public bool wishJump = false;
 
@@ -86,9 +81,22 @@ public class QMove : MonoBehaviour, IDamage
         originalHealth = health;
         currentShield = maxShield;
         UpdatePlayerUI();
+        //working on dev mode (show movement meta data, turn ammo infinite, 999 shields/health, etc)
     }
     void Update()
     {
+        if(GameManager.Instance.devMode)
+        {
+            ++frameCount;
+            dt += Time.deltaTime;
+
+            if(dt > 1.0 / fpsDisplayRate)
+            {
+                fps = Mathf.Round(frameCount / dt);
+                frameCount = 0;
+                dt -= 1f / fpsDisplayRate;
+            }
+        }
         ShieldBehavior();
         if (!GameManager.Instance.isPaused)
         {
@@ -376,5 +384,15 @@ public class QMove : MonoBehaviour, IDamage
             currentShield += amount;
             UpdatePlayerUI();
         }
+    }
+
+    //Comment this function out if in Dev Mode!!!
+    private void OnGUI()
+    {
+        GUI.Label(new Rect(0, 0, 400, 100), "FPS: " + fps, style);
+        var ups = controller.velocity;
+        ups.y = 0;
+        GUI.Label(new Rect(0, 15, 400, 100), "Speed: " + Mathf.Round(ups.magnitude * 100) / 100 + "ups", style);
+        GUI.Label(new Rect(0, 30, 400, 100), "Top Speed: " + Mathf.Round(playerTopVelocity * 100) / 100 + "ups", style);
     }
 }
