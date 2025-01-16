@@ -1,6 +1,7 @@
 using UnityEngine.Events;
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 public class GunScript1 : MonoBehaviour
 {
     int bulletLeft, bulletSHot;
@@ -49,7 +50,11 @@ public class GunScript1 : MonoBehaviour
         //if (MagaizeSize >0) { mussleflash.Play(); MiniShoot(); Railshoot(); }
         //else { return; }
         if(Input.GetMouseButtonDown(0)) { MiniShoot(); }
-       
+        for(int i =0; i<400;i++) 
+        {
+            if (Input.GetButton("Fire2")) { Railshoot(); }
+        }
+
 
     }
     public void MyInput()
