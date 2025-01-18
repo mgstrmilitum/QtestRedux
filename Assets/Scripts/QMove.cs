@@ -34,11 +34,9 @@ struct AmmoCount
 
 public class QMove : MonoBehaviour, IDamage
 {
+    //movement/control related
     public CharacterController controller;
     [SerializeField] Transform playerView;
-    [SerializeField] int health;
-    [SerializeField] bool shieldActive;
-    [SerializeField] int maxShield,currentShield;
     [SerializeField] float gravity = 20f;
     [SerializeField] float friction = 6f;
     [SerializeField] float xMouseSensitivity = 30f;
@@ -53,72 +51,98 @@ public class QMove : MonoBehaviour, IDamage
     [SerializeField] float sideStrafeSpeed = 1f;
     [SerializeField] float jumpSpeed = 8f;
     [SerializeField] bool holdJumpToBhop = false;
+    [SerializeField] bool invertLook = false;
     [SerializeField] float playerFriction = 0f;
+    public bool wishJump = false;
+    Vector3 moveDirectionNorm = Vector3.zero;
+    Vector3 playerVelocity = Vector3.zero;
+    [SerializeField] float playerTopVelocity = 0f;
+    [SerializeField] int crouchSpeedFactor; //2 halves speed, 4 quarters speed, etc
+    [SerializeField] float crouchScaleFactor; //how much character controller component is shrunk (1 halves character, .5 is 1/4th size, etc)
+    bool isSprinting = false;
+    [SerializeField] float sprintSpeedFactor; //2 doubles run speed, 4 quadruples, etc
+    bool isSliding = false;
 
 
+    //health/shield info
     int originalHealth;
+    public bool shieldActive;
+    [SerializeField] int health;
+    [SerializeField] int maxShield, currentShield;
 
     //camera rotations
     float rotX;
     float rotY;
 
-    Vector3 moveDirectionNorm = Vector3.zero;
-    Vector3 playerVelocity = Vector3.zero;
-    [SerializeField] float playerTopVelocity = 0f;
-
-    //float addspeed;
-    //float accelspeed;
-    //float currentspeed;
-    //float zspeed;
-    //float _speed;
-    //float dot;
-    //float k;
-    //float accel;
-    //float newspeed;
-    //float control;
-    //float drop;
-
-    public bool wishJump = false;
+    //dev mode variables
+    int frameCount = 0;
+    float dt = 0f;
+    float fps = 0f;
+    [SerializeField] float fpsDisplayRate = 4f;
+    public GUIStyle style;
 
     //Player commands, stores wish commands player requests (forward/back, left/right, jump, etc)
     Cmd cmd;
+
     void Start()
     {
         originalHealth = health;
         currentShield = maxShield;
         UpdatePlayerUI();
+        //working on dev mode (show movement meta data, turn ammo infinite, 999 shields/health, etc)
     }
     void Update()
     {
+        if(GameManager.Instance.devMode)
+        {
+            ++frameCount;
+            dt += Time.deltaTime;
+
+            if(dt > 1.0 / fpsDisplayRate)
+            {
+                fps = Mathf.Round(frameCount / dt);
+                frameCount = 0;
+                dt -= 1f / fpsDisplayRate;
+            }
+        }
         ShieldBehavior();
-
-        rotX -= Input.GetAxisRaw("Mouse Y") * xMouseSensitivity;
-        rotY += Input.GetAxisRaw("Mouse X") * yMouseSensitivity;
-
-        if(rotX < -90)
+        if (!GameManager.Instance.isPaused)
         {
-            rotX = -90;
-        }
-        else if(rotX > 90)
-        {
-            rotX = 90;
-        }
+            rotX -= Input.GetAxisRaw("Mouse Y") * xMouseSensitivity;
+            rotY += Input.GetAxisRaw("Mouse X") * yMouseSensitivity;
 
-        this.transform.rotation = Quaternion.Euler(0, rotY, 0);
-        playerView.rotation = Quaternion.Euler(rotX, rotY, 0);
+            if (rotX < -90)
+            {
+                rotX = -90;
+            }
+            else if (rotX > 90)
+            {
+                rotX = 90;
+            }
 
-        QueueJump();
+            this.transform.rotation = Quaternion.Euler(0, rotY, 0);
+            if (invertLook)
+            {
+                playerView.rotation = Quaternion.Euler(-rotX, rotY, 0);
+            }
+            else
+            {
+                playerView.rotation = Quaternion.Euler(rotX, rotY, 0);
+            }
 
-        if(controller.isGrounded)
-        {
-            GroundMove();
+            QueueJump();
+
+            if (controller.isGrounded)
+            {
+                GroundMove();
+            }
+            else
+            {
+                AirMove();
+            }
+
+            controller.Move(playerVelocity * Time.deltaTime);
         }
-        else
-        {
-            AirMove();
-        }
-
-        controller.Move(playerVelocity * Time.deltaTime);
     }
 
     private void SetMovementDir()
@@ -253,6 +277,35 @@ public class QMove : MonoBehaviour, IDamage
         var wishspeed = wishdir.magnitude;
         wishspeed *= moveSpeed;
 
+        #region Sprint
+        if(Input.GetButton("Sprint"))
+        {
+            wishspeed *= sprintSpeedFactor;
+        }
+
+        if (Input.GetButtonUp("Sprint"))
+        {
+            wishspeed /= sprintSpeedFactor;
+        }
+
+        #endregion
+
+        #region Crouch/Uncrouch
+        if (Input.GetButton("Crouch"))
+        {
+            wishspeed /= crouchSpeedFactor;
+            controller.height = crouchScaleFactor;
+            Debug.Log("Crouching!");
+
+        }
+        if (Input.GetButtonUp("Crouch"))
+        {
+            wishspeed *= crouchSpeedFactor;
+            controller.height = 2f;
+            Debug.Log("Standing again!");
+        }
+        #endregion
+
         Accelerate(wishdir, wishspeed, runAcceleration);
 
         // Reset the gravity velocity
@@ -363,6 +416,7 @@ public class QMove : MonoBehaviour, IDamage
     }
     void ShieldBehavior()
     {
+        if (currentShield != 0) { shieldActive = true;}
         if (currentShield < 0) { currentShield = 0; }
         if (currentShield > maxShield) { currentShield = maxShield; }
 
@@ -374,5 +428,15 @@ public class QMove : MonoBehaviour, IDamage
             currentShield += amount;
             UpdatePlayerUI();
         }
+    }
+
+    //Comment this function out if in Dev Mode!!!
+    private void OnGUI()
+    {
+        GUI.Label(new Rect(0, 0, 400, 100), "FPS: " + fps, style);
+        var ups = controller.velocity;
+        ups.y = 0;
+        GUI.Label(new Rect(0, 15, 400, 100), "Speed: " + Mathf.Round(ups.magnitude * 100) / 100 + "ups", style);
+        GUI.Label(new Rect(0, 30, 400, 100), "Top Speed: " + Mathf.Round(playerTopVelocity * 100) / 100 + "ups", style);
     }
 }
