@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TextCore.LowLevel;
+using UnityEngine.UI;
 
 
 
@@ -40,8 +42,9 @@ public class QMove : MonoBehaviour, IDamage
     [SerializeField] int maxShield,currentShield;
     [SerializeField] float gravity = 20f;
     [SerializeField] float friction = 6f;
-    [SerializeField] float xMouseSensitivity = 30f;
-    [SerializeField] float yMouseSensitivity = 30f;
+    [SerializeField] public float xMouseSensitivity = 30f; 
+    [SerializeField] public float yMouseSensitivity = 30f;
+    public Slider sensSlider;
     [SerializeField] float moveSpeed = 7f;
     [SerializeField] float runAcceleration = 14f;
     [SerializeField] float runDeacceleration = 10f;
@@ -65,17 +68,6 @@ public class QMove : MonoBehaviour, IDamage
     Vector3 playerVelocity = Vector3.zero;
     [SerializeField] float playerTopVelocity = 0f;
 
-    //float addspeed;
-    //float accelspeed;
-    //float currentspeed;
-    //float zspeed;
-    //float _speed;
-    //float dot;
-    //float k;
-    //float accel;
-    //float newspeed;
-    //float control;
-    //float drop;
 
     public bool wishJump = false;
 
@@ -94,6 +86,8 @@ public class QMove : MonoBehaviour, IDamage
         {
             rotX -= Input.GetAxisRaw("Mouse Y") * xMouseSensitivity;
             rotY += Input.GetAxisRaw("Mouse X") * yMouseSensitivity;
+
+
 
             if (rotX < -90)
             {
@@ -377,4 +371,5 @@ public class QMove : MonoBehaviour, IDamage
             UpdatePlayerUI();
         }
     }
+
 }
