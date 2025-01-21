@@ -1,22 +1,18 @@
 using UnityEngine;
 
-public class Items : MonoBehaviour
+public class Shield : MonoBehaviour, IPickup
 {
 
-   
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void OnTriggerEnter(Collider other)
+    {
+        IPickup item = other.GetComponent<IPickup>();
+        if (item != null)
+        {
+            OnPickup(other);
+        }
+     
+    }
+   public void OnPickup(Collider other)
     {
         if ((other.isTrigger))
         {
@@ -33,8 +29,7 @@ public class Items : MonoBehaviour
                 player.AddShield(100);
                 Destroy(gameObject);
             }
-            
+
         }
-     
     }
 }

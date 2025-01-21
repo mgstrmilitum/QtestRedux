@@ -32,7 +32,7 @@ struct AmmoCount
 
 }
 
-public class QMove : MonoBehaviour, IDamage
+public class QMove : MonoBehaviour, IDamage , IPickup
 {
     //movement/control related
     public CharacterController controller;
@@ -438,5 +438,16 @@ public class QMove : MonoBehaviour, IDamage
         ups.y = 0;
         GUI.Label(new Rect(0, 15, 400, 100), "Speed: " + Mathf.Round(ups.magnitude * 100) / 100 + "ups", style);
         GUI.Label(new Rect(0, 30, 400, 100), "Top Speed: " + Mathf.Round(playerTopVelocity * 100) / 100 + "ups", style);
+    }
+
+   public void AddHealth(int amount)
+    {
+        health += amount;
+        if (health > 100) { health = 100; }
+        UpdatePlayerUI();
+    }
+    public void OnPickup(Collider other)
+    {
+
     }
 }
