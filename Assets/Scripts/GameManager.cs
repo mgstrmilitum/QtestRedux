@@ -11,17 +11,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuActive;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] float songTimer;
+    [SerializeField] float songLength;
+    [SerializeField] public bool devMode = false;
     
     [SerializeField] TMP_Text goalCountText;
     public Image playerHealthBar;
+    public Image playerShieldBar;
+
     public GameObject damagePanel;
 
     public GameObject player;
-    public playerController playerScript;
+    public QMove playerScript;
 
-    public GameObject enemy;
-
-    public bool isPaused;
+    public bool isPaused = false;
     int goalCount;
 
     // Start is called before the first frame update
@@ -29,7 +33,10 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         player = GameObject.FindWithTag("Player");
-        playerScript = player.GetComponent<playerController>();
+        playerScript = player.GetComponent<QMove>();
+
+        Time.timeScale = 1f;
+        
     }
 
     // Update is called once per frame
@@ -47,6 +54,13 @@ public class GameManager : MonoBehaviour
             {
                 StateUnpause();
             }
+        }
+
+        songTimer += Time.deltaTime;
+        if (songTimer > songLength)
+        {
+            audioSource.Play();
+            songTimer = 0;
         }
     }
 

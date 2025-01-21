@@ -327,7 +327,7 @@ Transform:
   m_GameObject: {fileID: 1939170802416989087}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.513, y: -0.207, z: 0.175}
+  m_LocalPosition: {x: -1.52, y: 0, z: 0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -763,7 +763,7 @@ Animator:
   m_GameObject: {fileID: 6891503309227890253}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: f4209d51d1ad0434299f2d498ee076ba, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e769df51b31391942ac93e3d38c1c8d2, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -790,7 +790,7 @@ MonoBehaviour:
   agent: {fileID: 7521096368958418817}
   model: {fileID: 2546498858994776546}
   health: 3
-  faceTargetSpeed: 8
+  faceTargetSpeed: 20
   shotPosition: {fileID: 1672123395022164023}
   bullet: {fileID: 6299318728652817414, guid: 6024002c8df893b49b98e4b41b118439, type: 3}
   rateOfFire: 1.5

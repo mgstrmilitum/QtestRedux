@@ -21,7 +21,10 @@ public class Damage : MonoBehaviour
     void Start()
     {
         rb.linearVelocity = transform.forward * speed;
-        Destroy(gameObject, destroyTime);
+        if (type == DamageType.Moving)
+        {
+            Destroy(gameObject, destroyTime);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

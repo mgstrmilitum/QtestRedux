@@ -3,7 +3,16 @@ guid: 39cdea38bc0b12948bebb7e91c215d12
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - menuPause: {instanceID: 0}
+  - menuWin: {instanceID: 0}
+  - menuLose: {instanceID: 0}
+  - menuActive: {instanceID: 0}
+  - goalCountText: {instanceID: 0}
+  - playerHealthBar: {instanceID: 0}
+  - damagePanel: {instanceID: 0}
+  - player: {instanceID: 0}
+  - playerScript: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
