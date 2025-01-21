@@ -39,8 +39,8 @@ public class QMove : MonoBehaviour, IDamage , IPickup
     [SerializeField] Transform playerView;
     [SerializeField] float gravity = 20f;
     [SerializeField] float friction = 6f;
-    [SerializeField] float xMouseSensitivity = 30f;
-    [SerializeField] float yMouseSensitivity = 30f;
+    [SerializeField] float xMouseSensitivity = 2f;
+    [SerializeField] float yMouseSensitivity = 2f;
     [SerializeField] float moveSpeed = 7f;
     [SerializeField] float runAcceleration = 14f;
     [SerializeField] float runDeacceleration = 10f;
@@ -449,5 +449,16 @@ public class QMove : MonoBehaviour, IDamage , IPickup
     public void OnPickup(Collider other)
     {
 
+    }
+
+    public void AdjustSens(float amount)
+    {
+        xMouseSensitivity = amount;
+        yMouseSensitivity = amount;
+    }
+
+    public void InvertLook ()
+    {
+        invertLook = !invertLook;
     }
 }
