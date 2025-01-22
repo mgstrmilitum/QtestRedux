@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 
 
@@ -39,8 +40,8 @@ public class QMove : MonoBehaviour, IDamage , IPickup
     [SerializeField] Transform playerView;
     [SerializeField] float gravity = 20f;
     [SerializeField] float friction = 6f;
-    [SerializeField] float xMouseSensitivity = 2f;
-    [SerializeField] float yMouseSensitivity = 2f;
+    [SerializeField] public float xMouseSensitivity = 2f;
+    [SerializeField] public float yMouseSensitivity = 2f;
     [SerializeField] float moveSpeed = 7f;
     [SerializeField] float runAcceleration = 14f;
     [SerializeField] float runDeacceleration = 10f;
@@ -51,7 +52,8 @@ public class QMove : MonoBehaviour, IDamage , IPickup
     [SerializeField] float sideStrafeSpeed = 1f;
     [SerializeField] float jumpSpeed = 8f;
     [SerializeField] bool holdJumpToBhop = false;
-    [SerializeField] bool invertLook = false;
+    [SerializeField] public bool invertLook = false;
+
     [SerializeField] float playerFriction = 0f;
     public bool wishJump = false;
     Vector3 moveDirectionNorm = Vector3.zero;
@@ -86,6 +88,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup
 
     void Start()
     {
+        AssignSettings();
         originalHealth = health;
         currentShield = maxShield;
         UpdatePlayerUI();
@@ -460,5 +463,12 @@ public class QMove : MonoBehaviour, IDamage , IPickup
     public void InvertLook ()
     {
         invertLook = !invertLook;
+    }
+
+public void AssignSettings()
+    {
+        xMouseSensitivity = PlayerPrefs.GetFloat("mouseSens", 2);
+        yMouseSensitivity = PlayerPrefs.GetFloat("mouseSens", 2);
+        invertLook = (PlayerPrefs.GetInt("invertAxis", 0) != 0);
     }
 }
