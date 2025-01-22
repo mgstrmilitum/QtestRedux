@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 
 
@@ -32,15 +33,15 @@ struct AmmoCount
 
 }
 
-public class QMove : MonoBehaviour, IDamage
+public class QMove : MonoBehaviour, IDamage , IPickup
 {
     //movement/control related
     public CharacterController controller;
     [SerializeField] Transform playerView;
     [SerializeField] float gravity = 20f;
     [SerializeField] float friction = 6f;
-    [SerializeField] float xMouseSensitivity = 30f;
-    [SerializeField] float yMouseSensitivity = 30f;
+    [SerializeField] public float xMouseSensitivity = 2f;
+    [SerializeField] public float yMouseSensitivity = 2f;
     [SerializeField] float moveSpeed = 7f;
     [SerializeField] float runAcceleration = 14f;
     [SerializeField] float runDeacceleration = 10f;
@@ -51,7 +52,8 @@ public class QMove : MonoBehaviour, IDamage
     [SerializeField] float sideStrafeSpeed = 1f;
     [SerializeField] float jumpSpeed = 8f;
     [SerializeField] bool holdJumpToBhop = false;
-    [SerializeField] bool invertLook = false;
+    [SerializeField] public bool invertLook = false;
+
     [SerializeField] float playerFriction = 0f;
     public bool wishJump = false;
     Vector3 moveDirectionNorm = Vector3.zero;
@@ -86,6 +88,7 @@ public class QMove : MonoBehaviour, IDamage
 
     void Start()
     {
+        AssignSettings();
         originalHealth = health;
         currentShield = maxShield;
         UpdatePlayerUI();
@@ -438,5 +441,34 @@ public class QMove : MonoBehaviour, IDamage
         ups.y = 0;
         GUI.Label(new Rect(0, 15, 400, 100), "Speed: " + Mathf.Round(ups.magnitude * 100) / 100 + "ups", style);
         GUI.Label(new Rect(0, 30, 400, 100), "Top Speed: " + Mathf.Round(playerTopVelocity * 100) / 100 + "ups", style);
+    }
+
+   public void AddHealth(int amount)
+    {
+        health += amount;
+        if (health > 100) { health = 100; }
+        UpdatePlayerUI();
+    }
+    public void OnPickup(Collider other)
+    {
+
+    }
+
+    public void AdjustSens(float amount)
+    {
+        xMouseSensitivity = amount;
+        yMouseSensitivity = amount;
+    }
+
+    public void InvertLook ()
+    {
+        invertLook = !invertLook;
+    }
+
+public void AssignSettings()
+    {
+        xMouseSensitivity = PlayerPrefs.GetFloat("mouseSens", 2);
+        yMouseSensitivity = PlayerPrefs.GetFloat("mouseSens", 2);
+        invertLook = (PlayerPrefs.GetInt("invertAxis", 0) != 0);
     }
 }
