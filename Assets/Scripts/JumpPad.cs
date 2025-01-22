@@ -20,6 +20,7 @@ public class JumpPad : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Debug.DrawRay(this.transform.position, this.transform.up * 3f, Color.red);
         //why fixed update versus update?
         float thresholdTime = Time.timeSinceLevelLoad - launchDelay;
 
@@ -32,7 +33,7 @@ public class JumpPad : MonoBehaviour
                 targetsToClear.Add(kvp.Key);
             }
         }
-
+        //ADD RUNPADS IN ADDITION TO JUMP/VERT PAD
         foreach(var target in targetsToClear)
         {
             targets.Remove(target);
@@ -43,7 +44,9 @@ public class JumpPad : MonoBehaviour
 
     private void Launch(Rigidbody key)
     {
-       key.AddForce(transform.up * launchForce, LaunchMode);
+
+        key.constraints = RigidbodyConstraints.None;
+        key.AddForce(this.transform.up * launchForce, LaunchMode);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -54,13 +57,15 @@ public class JumpPad : MonoBehaviour
         {
             targets[rb] = new JumpPadTarget() { contactTime = Time.timeSinceLevelLoad };
         }
-
-        StartCoroutine(PrepLaunch(collision.gameObject));
+        Rigidbody trigRb = collision.rigidbody;
+        trigRb.constraints = RigidbodyConstraints.FreezeAll;
+        collision.transform.SetParent(this.transform);
+        //StartCoroutine(PrepLaunch(collision.gameObject));
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        
+        collision.transform.SetParent(null);
     }
 
     IEnumerator PrepLaunch(GameObject obj)
@@ -70,18 +75,18 @@ public class JumpPad : MonoBehaviour
         if(obj.CompareTag("Player"))
         {
             isPlayer = true;
-            GameManager.Instance.playerScript.controller.enabled = false;
+            //GameManager.Instance.playerScript.controller.enabled = false;
         }
         else if(obj.CompareTag("Enemy"))
         {
             isEnemy = true;
             obj.GetComponent<EnemyAI>().agent.enabled = false;
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
 
         if (isPlayer)
         {
-            GameManager.Instance.playerScript.controller.enabled = true;
+           // GameManager.Instance.playerScript.controller.enabled = true;
         }
         else if(isEnemy)
         {
