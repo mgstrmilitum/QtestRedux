@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] AudioSource audioSource;
     [SerializeField] float songTimer;
     [SerializeField] float songLength;
+
+    [SerializeField] public float worldGravity;
     [SerializeField] public bool devMode = false;
     
     [SerializeField] TMP_Text goalCountText;
@@ -23,7 +25,7 @@ public class GameManager : MonoBehaviour
     public GameObject damagePanel;
 
     public GameObject player;
-    public QMove playerScript;
+    public QMoveRedux playerScript;
 
     public bool isPaused = false;
     int goalCount;
@@ -33,7 +35,7 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         player = GameObject.FindWithTag("Player");
-        playerScript = player.GetComponent<QMove>();
+        playerScript = player.GetComponent<QMoveRedux>();
 
         Time.timeScale = 1f;
         
