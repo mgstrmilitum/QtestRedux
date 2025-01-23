@@ -45,7 +45,7 @@ public class Items : MonoBehaviour , IPickup
         }
 
     }
-        private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
         {
             //if the object is a child of IPickup then execute OnPickup()
             IPickup item = other.GetComponent<IPickup>();
