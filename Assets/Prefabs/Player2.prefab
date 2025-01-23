@@ -140,13 +140,16 @@ MonoBehaviour:
   jumpSpeed: 50
   timeForJumpBoost: 0.5
   gravity: 250
-  health: 3
+  health: 100
+  armor: 0
   shootDamage: 1
   shootDistance: 3
   jumpSpeedMod: 2
   rb: {fileID: 2148556853915444121}
   playerCenter: {fileID: 141766510987901895}
   groundingDistance: 1.1
+  mat: {fileID: 0}
+  team: 0
   jumpCount: 0
   groundLayer:
     serializedVersion: 2
@@ -154,6 +157,7 @@ MonoBehaviour:
   moveDirection: {x: 0, y: 0, z: 0}
   playerVelocity: {x: 0, y: 0, z: 0}
   isLanded: 0
+  hasInvis: 0
 --- !u!136 &8103193098837901616
 CapsuleCollider:
   m_ObjectHideFlags: 0
