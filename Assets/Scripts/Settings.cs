@@ -55,4 +55,14 @@ public class Settings : MonoBehaviour
 
     }
 
+    public void ClearSettings()
+    {
+        PlayerPrefs.SetFloat("mouseSens", 2);
+        PlayerPrefs.SetInt("invertAxis", 0);
+
+        player.AssignSettings();
+        
+        LoadSettings();
+    }
+
 }
