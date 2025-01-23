@@ -29,4 +29,9 @@ public class MovingObject : MonoBehaviour
     {
         collision.transform.SetParent(transform);
     }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        collision.transform.SetParent(null);
+    }
 }

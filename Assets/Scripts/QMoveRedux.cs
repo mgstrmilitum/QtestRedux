@@ -104,8 +104,10 @@ public class QMoveRedux : MonoBehaviour, IDamage
             forceDirection = new Vector3(0f, forceDirection.y, 0f);
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
         }
+
         forceDirection += moveDirection.x * strafeSpeed * transform.right * Time.deltaTime;
         forceDirection += moveDirection.y * forwardBackSpeed * transform.forward * Time.deltaTime;
+        
         if (isSprinting)
         {
             forceDirection *= sprintMultiplier;

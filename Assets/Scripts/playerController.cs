@@ -6,34 +6,53 @@ using UnityEngine;
 
 public class playerController : MonoBehaviour, IDamage
 {
+    [Header("Components")]
     [SerializeField] CharacterController controller;
     [SerializeField] LayerMask ignoreMask;
+    [SerializeField] GameObject muzzleFlash;
+
+    [Header("Stats")]
     [SerializeField] int speed;
-    [SerializeField] int sprintMod;
+    [Range(1,10)][SerializeField] int sprintMod;
     [SerializeField] int crouchMod;
     [SerializeField] int jumpMax;
     [SerializeField] int jumpSpeed;
     [SerializeField] float timeForJumpBoost;
     [SerializeField] int gravity;
-    [SerializeField] int health;
-    [SerializeField] int armor;
-    [SerializeField] int shootDamage;
-    [SerializeField] int shootDistance;
-    [SerializeField] int jumpSpeedMod;
+    [Range(1, 10)][SerializeField] int health;
+    [Range(1, 10)][SerializeField] int armor;
+    int shootDamage;
+    int shootDistance;
+    int jumpSpeedMod;
     [SerializeField] Rigidbody rb;
     [SerializeField] Transform playerCenter;
     [SerializeField] float groundingDistance;
+    [SerializeField] float shootRate;
     [SerializeField] Material mat;
+    [SerializeField] AudioSource aud;
+
+    [Header("Guns")]
+    [SerializeField] List<GunStats> gunList = new List<GunStats>();
+
+    [Header("Audio")]
+    [SerializeField] AudioClip[] audSteps;
+    [SerializeField][Range(0, 1)] float audStepsVol;
+    [SerializeField] AudioClip[] audHurt;
+    [SerializeField] [Range(0,1)] float audHurtVol;
+    [SerializeField] AudioClip[] audJump;
+    [SerializeField][Range(0, 1)] float audJumpVol;
 
     [SerializeField]int jumpCount = 0;
     int hpOriginal;
     float timeGrounded = 0f;
-
+    float shootTimer = 0f;
+    int gunListPos;
     public LayerMask groundLayer;
     public Vector3 moveDirection;
     public Vector3 playerVelocity;
 
     bool isSprinting = false;
+    bool isPlayingSteps;
     bool justLanded = false;
     public bool isLanded = false;
 
@@ -49,6 +68,7 @@ public class playerController : MonoBehaviour, IDamage
         myColor = mat.color;
         hpOriginal = health;
         UpdatePlayerUI();
+        shootTimer = shootRate;
     }
 
     // Update is called once per frame
@@ -57,6 +77,7 @@ public class playerController : MonoBehaviour, IDamage
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.blue);
         Movement();
         Crouch();
+        shootTimer += Time.deltaTime;
         if(hasInvis)
         {
             StartCoroutine(Invisibility());
@@ -109,12 +130,17 @@ public class playerController : MonoBehaviour, IDamage
     void Movement()
     {
         StartCoroutine(DecreaseMegaHealthArmor());
-        //if (controller.isGrounded)
-        //{
-        //    jumpCount = 0;
-        //    playerVelocity = Vector3.zero;
-        //    //timeGrounded = 0f;
-        //}
+        if (controller.isGrounded)
+        {
+            jumpCount = 0;
+            playerVelocity = Vector3.zero;
+            //timeGrounded = 0f;
+
+            if (moveDirection.magnitude > 0.3f && !isPlayingSteps)
+            {
+                StartCoroutine(PlaySteps());
+            }
+        }
 
         timeGrounded += Time.deltaTime;
         //moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -143,10 +169,23 @@ public class playerController : MonoBehaviour, IDamage
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, yVelo, rb.linearVelocity.z);
         }
         rb.angularVelocity = Vector3.zero;
-        if(Input.GetButtonDown("Fire1"))
+        if(Input.GetButton("Fire1") && gunList.Count > 0 && shootTimer >= shootRate)
         {
             Shoot();
         }
+
+    }
+
+    IEnumerator PlaySteps()
+    {
+        isPlayingSteps = true;
+        aud.PlayOneShot(audSteps[Random.Range(0, audSteps.Length)], audStepsVol);
+        if (!isSprinting)
+            yield return new WaitForSeconds(0.5f);
+        else
+            yield return new WaitForSeconds(0.3f);
+
+        isPlayingSteps = false;
     }
 
     void Jump()
@@ -168,6 +207,7 @@ public class playerController : MonoBehaviour, IDamage
             ++jumpCount;
             isLanded = false;
             rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
+            aud.PlayOneShot(audJump[Random.Range(0, audJump.Length)], audJumpVol);
             //rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpSpeed, rb.linearVelocity.z);
         }
     }
@@ -204,25 +244,36 @@ public class playerController : MonoBehaviour, IDamage
     void Shoot()
     {
         RaycastHit hit;
-        
+        shootTimer = 0f;
+        aud.PlayOneShot(gunList[gunListPos].shootSound[Random.Range(0, gunList[gunListPos].shootSound.Length)], gunList[gunListPos].shootSoundVolume);
+        StartCoroutine(FlashMuzzle());
+
         if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDistance, ~ignoreMask))
         {
             Debug.Log("Hit a " + hit.collider.name + "!");
+            Instantiate(gunList[gunListPos].hitEffect, hit.point, Quaternion.identity);
+
             IDamage dmg = hit.collider.GetComponent<IDamage>();
             if(dmg != null)
             {
                 dmg.TakeDamage(shootDamage);
             }
         }
-
         //Do feedback as quickly as you can!
+    }
+
+    IEnumerator FlashMuzzle()
+    {
+        muzzleFlash.SetActive(true);
+        yield return new WaitForSeconds(.05f);
+        muzzleFlash.SetActive(false);
     }
 
     public void TakeDamage(int amount)
     {
         health -= amount;
         UpdatePlayerUI();
-
+        aud.PlayOneShot(audHurt[Random.Range(0, audHurt.Length)], audHurtVol);
         StartCoroutine(FlashDamagePanel());
         if(health <= 0)
         {
