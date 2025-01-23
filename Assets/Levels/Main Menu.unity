@@ -2422,6 +2422,14 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4139886956587013241, guid: 0f261fe04877d564c903b873fd552bcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 541387980}
+    - target: {fileID: 4139886956587013241, guid: 0f261fe04877d564c903b873fd552bcf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ClearSettings
+      objectReference: {fileID: 0}
     - target: {fileID: 5218173909589504434, guid: 0f261fe04877d564c903b873fd552bcf, type: 3}
       propertyPath: m_IsActive
       value: 1
