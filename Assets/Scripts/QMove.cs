@@ -52,6 +52,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup
     [SerializeField] float sideStrafeSpeed = 1f;
     [SerializeField] float jumpSpeed = 8f;
     [SerializeField] bool holdJumpToBhop = false;
+
     [SerializeField] public bool invertLook = false;
 
     [SerializeField] float playerFriction = 0f;

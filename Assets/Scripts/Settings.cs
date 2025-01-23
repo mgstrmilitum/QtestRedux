@@ -23,6 +23,7 @@ public class Settings : MonoBehaviour
     private void Awake()
     {
         LoadSettings();
+      
     }
     public void AdjustSens(float amount)
     {
@@ -34,21 +35,20 @@ public class Settings : MonoBehaviour
         PlayerPrefs.SetFloat("mouseSens", mouseSens);
 
         //saving the invert bool
-        invertAxis = player.invertLook;
         int axisInt;
-        if(invertAxis  == true) { axisInt = 1; }
+        if(player.invertLook  == true) { axisInt = 1; }
         else { axisInt = 0; }
-        PlayerPrefs.SetFloat("invertAxis", axisInt);
+        PlayerPrefs.SetInt("invertAxis", axisInt);
 
 
     }
     public void LoadSettings()
     {
         mouseSens = PlayerPrefs.GetFloat("mouseSens", 2);
-        invertAxis = (PlayerPrefs.GetInt("invertAxis", 0) != 0);
+        invertAxis = (PlayerPrefs.GetInt("invertAxis") != 0);
         
-if (invertAxis == true) { invertButton.SetActive(true); }
-       else if (invertAxis == false) { invertButton.SetActive(false); }
+        if (invertAxis == true) { invertButton.gameObject.SetActive(true); }
+       else if (invertAxis == false) { invertButton.gameObject.SetActive(false); }
 
 
     }
