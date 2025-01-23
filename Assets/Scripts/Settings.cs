@@ -45,10 +45,12 @@ public class Settings : MonoBehaviour
     public void LoadSettings()
     {
         mouseSens = PlayerPrefs.GetFloat("mouseSens", 2);
+        sensSlider.value = mouseSens;
+
         invertAxis = (PlayerPrefs.GetInt("invertAxis") != 0);
-        
         if (invertAxis == true) { invertButton.gameObject.SetActive(true); }
-       else if (invertAxis == false) { invertButton.gameObject.SetActive(false); }
+        else if (invertAxis == false) { invertButton.gameObject.SetActive(false); }
+
 
 
     }
