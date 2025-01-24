@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -30,6 +31,11 @@ public class playerController : MonoBehaviour, IDamage
     [SerializeField] float shootRate;
     [SerializeField] Material mat;
     [SerializeField] AudioSource aud;
+    [SerializeField] float xMouseSensitivity;
+    [SerializeField] float yMouseSensitivity;
+    float rotX;
+    float rotY;
+    [SerializeField] Transform playerView;
 
     [Header("Guns")]
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
@@ -58,6 +64,8 @@ public class playerController : MonoBehaviour, IDamage
 
     bool hasQuad;
     public bool hasInvis;
+    bool isPaused = false;
+    bool invertLook = false;
 
     Color myColor;
 
@@ -74,13 +82,38 @@ public class playerController : MonoBehaviour, IDamage
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.blue);
-        Movement();
-        Crouch();
-        shootTimer += Time.deltaTime;
-        if(hasInvis)
+        if (!isPaused)
         {
-            StartCoroutine(Invisibility());
+
+            rotX -= Input.GetAxisRaw("Mouse Y") * xMouseSensitivity;
+            rotY += Input.GetAxisRaw("Mouse X") * yMouseSensitivity;
+
+            if (rotX < -90)
+            {
+                rotX = -90;
+            }
+            else if (rotX > 90)
+            {
+                rotX = 90;
+            }
+
+            this.transform.rotation = Quaternion.Euler(0, rotY, 0);
+            if (invertLook)
+            {
+                playerView.rotation = Quaternion.Euler(-rotX, rotY, 0);
+            }
+            else
+            {
+                playerView.rotation = Quaternion.Euler(rotX, rotY, 0);
+            }
+            Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.blue);
+            Movement();
+            Crouch();
+            shootTimer += Time.deltaTime;
+            if (hasInvis)
+            {
+                StartCoroutine(Invisibility());
+            }
         }
     }
 
@@ -146,22 +179,10 @@ public class playerController : MonoBehaviour, IDamage
         //moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         moveDirection = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
 
-        //controller.Move(moveDirection * speed * Time.deltaTime);
-        //rb.AddForceAtPosition(moveDirection * speed * Time.deltaTime, playerCenter.position, ForceMode.Force);
-        rb.linearVelocity = moveDirection * speed;
+        controller.Move(moveDirection * speed * Time.deltaTime);
 
-        //if (timeGrounded <= timeForJumpBoost)
-        //{
-        //    justLanded = true;
-        //    //StartCoroutine(QuickJump());
-        //}
-        //else
-        //{
-        //    Jump();
-        //}
 
         Jump();
-        //controller.Move(playerVelocity * Time.deltaTime);
         float yVelo = rb.linearVelocity.y;
         yVelo -= gravity * Time.deltaTime;
         if (!isLanded)
@@ -169,6 +190,7 @@ public class playerController : MonoBehaviour, IDamage
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, yVelo, rb.linearVelocity.z);
         }
         rb.angularVelocity = Vector3.zero;
+        controller.Move(playerVelocity * Time.deltaTime);
         if(Input.GetButton("Fire1") && gunList.Count > 0 && shootTimer >= shootRate)
         {
             Shoot();
@@ -191,21 +213,20 @@ public class playerController : MonoBehaviour, IDamage
     void Jump()
     {
         RaycastHit hit;
-        if(Physics.Raycast(playerCenter.position, Vector3.down, out hit, groundingDistance))
+        if (Physics.Raycast(playerCenter.position, Vector3.down, out hit, groundingDistance))
         {
-            if(hit.collider.CompareTag("Floor"))
+            if (hit.collider.CompareTag("Floor"))
             {
                 isLanded = true;
                 jumpCount = 0;
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+                //rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
                 Debug.Log("Touching the ground!");
             }
         }
-
         if(isLanded && Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
+            Debug.Log("JUMP!");
             ++jumpCount;
-            isLanded = false;
             rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
             aud.PlayOneShot(audJump[Random.Range(0, audJump.Length)], audJumpVol);
             //rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpSpeed, rb.linearVelocity.z);

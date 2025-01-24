@@ -34,6 +34,8 @@ public class EnemyAI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //COMMENT THIS LINE OUT ONCE SPAWNER IS ADDED
+        GameManager.Instance.UpdateGameGoal(1);
         originalColor = model.material.color;
         stoppingDistanceOrig = agent.stoppingDistance;
         startingPos = transform.position;

@@ -328,6 +328,7 @@ public class QMove : MonoBehaviour, IDamage, IPickup
         // Reset the gravity velocity
         playerVelocity.y = -gravity * Time.deltaTime;
 
+        //Already have determined if charactercontroller is grounded in update
         if (wishJump)
         {
             playerVelocity.y = jumpSpeed;
@@ -362,7 +363,7 @@ public class QMove : MonoBehaviour, IDamage, IPickup
         {
             newspeed /= speed;
         }
-
+        
         playerVelocity.x *= newspeed;
         playerVelocity.z *= newspeed;
     }
@@ -373,7 +374,9 @@ public class QMove : MonoBehaviour, IDamage, IPickup
         float accelspeed;
         float currentspeed;
 
+        //projection of player velocity onto wishdir
         currentspeed = Vector3.Dot(playerVelocity, wishdir);
+        //amount to increase velocity
         addspeed = wishspeed - currentspeed;
 
         if (addspeed <= 0)
