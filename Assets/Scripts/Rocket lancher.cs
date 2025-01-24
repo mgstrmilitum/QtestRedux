@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Rocketlancher : MonoBehaviour
@@ -6,6 +7,11 @@ public class Rocketlancher : MonoBehaviour
     private Transform rocketTransform;
     public float rocketMovingForce;
     [SerializeField] Transform shootPos;
+    public int boomDamage;
+    public int rocketLoad;
+    EnemyAI enemy;
+
+    GameObject rocket;
     void Start()
     {
         Setinitalreference();
@@ -19,20 +25,33 @@ public class Rocketlancher : MonoBehaviour
             LaunchRocket();
         }
     }
+
     void LaunchRocket()
     {
-        GameObject rocket = (GameObject) Instantiate(rocketPrehaber, shootPos.position, shootPos.rotation);
+        if(rocketLoad >0)
+        { rocket =  Instantiate(rocketPrehaber, shootPos.position, shootPos.rotation);
         Rigidbody body = rocket.GetComponent<Rigidbody>();
         body.isKinematic=false;
 
         rocket.GetComponent<Rigidbody>().AddForce(rocketTransform.right *rocketMovingForce, ForceMode.Impulse);
+        if(rocket.GetComponent<Rigidbody>() != null)
+        {
+            Destroy(rocket, 1);
+        }
 
         Destroy(rocket, 3);
+
+        }
+        rocketLoad--;
 
     }
     void Setinitalreference()
     {
         rocketTransform= transform;
     }
-    
+    private void OnCollisionEnter(Collision collision)
+    {
+        Destroy(rocket);
+    }
+
 }

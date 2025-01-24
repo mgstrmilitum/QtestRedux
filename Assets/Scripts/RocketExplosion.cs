@@ -8,6 +8,7 @@ public class RocketExplosion : MonoBehaviour
     public LayerMask explosionLayers;
     public ParticleSystem Boom;
     public int blastDamage;
+    [SerializeField] LayerMask whatISEnemy;
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log(collision.contacts[0].point.ToString());
@@ -22,16 +23,20 @@ public class RocketExplosion : MonoBehaviour
             if(hotcol.GetComponent<Rigidbody>() != null)
             {hotcol.GetComponent<Rigidbody>().isKinematic = false;
              hotcol.GetComponent <Rigidbody>().AddExplosionForce(explosiveForce,explosionPoint,blastRadius,1,ForceMode.Impulse);
-                IDamage dmg = hotcol.GetComponent<IDamage>();
-            if (dmg!=null)
-            {
-
-                dmg.TakeDamage(blastDamage);
+                OnTriggerEnter(hotcol);
+               
             }
 
-            }
-            
         }
     }
-
+    private void OnTriggerEnter(Collider other)
+    {
+       
+       if(other.GetComponent<EnemyAI>() != null)
+       {other.GetComponent<EnemyAI>().TakeDamage(blastDamage);
+        Destroy(other.gameObject);
+       }
+            
+        
+    }
 }
