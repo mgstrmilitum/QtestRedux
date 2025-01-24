@@ -1,13 +1,21 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 
-public class playerController : MonoBehaviour, IDamage
+public class playerController : MonoBehaviour, IDamage, IPickup
 {
+    [Header("-----Components-----")]
     [SerializeField] CharacterController controller;
     [SerializeField] LayerMask ignoreMask;
+    [SerializeField] Rigidbody rb;
+    [SerializeField] Transform playerCenter;
+    [SerializeField] float groundingDistance;
+    [SerializeField] Material mat;
+    [SerializeField] AudioSource audio;
+    [Header("-----Stats-----")]
     [SerializeField] int speed;
     [SerializeField] int sprintMod;
     [SerializeField] int crouchMod;
@@ -17,17 +25,25 @@ public class playerController : MonoBehaviour, IDamage
     [SerializeField] int gravity;
     [SerializeField] int health;
     [SerializeField] int armor;
+    [SerializeField] int jumpSpeedMod;
+    [SerializeField] int jumpCount = 0;
+    [Header("-----Guns-----")]
     [SerializeField] int shootDamage;
     [SerializeField] int shootDistance;
-    [SerializeField] int jumpSpeedMod;
-    [SerializeField] Rigidbody rb;
-    [SerializeField] Transform playerCenter;
-    [SerializeField] float groundingDistance;
-    [SerializeField] Material mat;
-
-    [SerializeField]int jumpCount = 0;
+    [SerializeField] float shootRate;
+    [SerializeField] GameObject gunModel;
+    [SerializeField] GameObject muzzleFlash;
+    [SerializeField] List<GunStats> gunList = new List<GunStats>();
+    [Header("-----Audio-----")]
+    [SerializeField] AudioClip[] audioHurt;
+    [SerializeField] float audioHurtVolume;
+    [SerializeField] AudioClip[] audioSteps;
+    [SerializeField] float audioStepsVolume;
+    
+    
     int hpOriginal;
     float timeGrounded = 0f;
+    int gunListPos;
 
     public LayerMask groundLayer;
     public Vector3 moveDirection;
@@ -36,9 +52,11 @@ public class playerController : MonoBehaviour, IDamage
     bool isSprinting = false;
     bool justLanded = false;
     public bool isLanded = false;
+    float shootTimer;
 
     bool hasQuad;
     public bool hasInvis;
+    bool isPlayingSteps;
 
     Color myColor;
 
@@ -49,12 +67,20 @@ public class playerController : MonoBehaviour, IDamage
         myColor = mat.color;
         hpOriginal = health;
         UpdatePlayerUI();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.blue);
+
+        if(!GameManager.Instance.isPaused)
+        {
+            Movement();
+            SelectGun();
+        }
+        
         Movement();
         Crouch();
         if(hasInvis)
@@ -149,6 +175,22 @@ public class playerController : MonoBehaviour, IDamage
         }
     }
 
+    IEnumerator playSteps()
+    {
+        isPlayingSteps = true;
+
+        audio.PlayOneShot(audioSteps[Random.Range(0, audioSteps.Length)], audioStepsVolume);
+
+        if(!isSprinting)
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.3f);
+        }
+    }
+
     void Jump()
     {
         RaycastHit hit;
@@ -203,25 +245,42 @@ public class playerController : MonoBehaviour, IDamage
 
     void Shoot()
     {
+        shootTimer = 0;
+        audio.PlayOneShot(gunList[gunListPos].shootSound[Random.Range(0, gunList[gunListPos].shootSound.Length)], gunList[gunListPos].shootSoundVol);
+
         RaycastHit hit;
         
-        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDistance, ~ignoreMask))
+        if(gunList.Count > 0)
         {
-            Debug.Log("Hit a " + hit.collider.name + "!");
-            IDamage dmg = hit.collider.GetComponent<IDamage>();
-            if(dmg != null)
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDistance, ~ignoreMask))
             {
-                dmg.TakeDamage(shootDamage);
+                Debug.Log("Hit a " + hit.collider.name + "!");
+
+                Instantiate(gunList[gunListPos].hitEffect, hit.point, Quaternion.identity);
+                StartCoroutine(FlashMuzzleFire());
+
+                IDamage dmg = hit.collider.GetComponent<IDamage>();
+                if (dmg != null)
+                {
+                    dmg.TakeDamage(shootDamage);
+                }
             }
         }
-
         //Do feedback as quickly as you can!
+    }
+
+    IEnumerator FlashMuzzleFire()
+    {
+        muzzleFlash.SetActive(true);
+        yield return new WaitForSeconds(0.05f);
+        muzzleFlash.SetActive(false);
     }
 
     public void TakeDamage(int amount)
     {
         health -= amount;
         UpdatePlayerUI();
+        audio.PlayOneShot(audioHurt[Random.Range(0, audioHurt.Length)], audioHurtVolume);
 
         StartCoroutine(FlashDamagePanel());
         if(health <= 0)
@@ -294,5 +353,35 @@ public class playerController : MonoBehaviour, IDamage
     IEnumerator QuadDamage()
     {
         yield return new WaitForSeconds(0f);
+    }
+
+    public void GetGunStats(GunStats gun)
+    {
+        gunList.Add(gun);
+        gunListPos = gunList.Count - 1;
+
+        ChangeGun();
+    }
+
+    void SelectGun()
+    {
+        if(Input.GetAxis("Mouse Scrollwheel") > 0 && gunListPos < gunList.Count-1)
+        {
+            gunListPos++;
+        }
+        else if(Input.GetAxis("Mouse Scrollwheel") < 0 && gunListPos > 0)
+        { 
+            gunListPos--;
+        }
+    }
+
+    void ChangeGun()
+    {
+        shootDamage = gunList[gunListPos].shootDamage;
+        shootDistance = gunList[gunListPos].shootDist;
+        shootRate = gunList[gunListPos].shootRate;
+
+        gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunListPos].model.GetComponent<MeshFilter>().sharedMesh;
+        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunListPos].model.GetComponent<MeshRenderer>().sharedMaterial;
     }
 }
