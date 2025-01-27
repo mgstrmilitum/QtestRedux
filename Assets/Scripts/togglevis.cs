@@ -19,13 +19,5 @@ public class togglevis : MonoBehaviour
         gameObject.SetActive(!gameObject.activeSelf);
     
     }
-    public void TurnOn(GameObject gameobject)
-    {
-        gameobject.SetActive(true);
-    }
-
-    public void TurnOff(GameObject gameobject)
-    {
-        gameobject.SetActive(false);
-    }
+  
 }
