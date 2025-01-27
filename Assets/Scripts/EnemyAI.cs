@@ -8,6 +8,7 @@ using static Photon.Pun.UtilityScripts.PunTeams;
 /*GENERAL COMMENTS*/
 //-------------------
 // -Hellhounds Should Probably be another script.
+// -Should be Up to date with Lecture 2 so far -DY
 //-------------------
 
 
@@ -28,12 +29,8 @@ public class EnemyAI : MonoBehaviour, IDamage
     bool isShooting;
     bool playerInRange;
     
-
-    Vector3 playerDirection;
-    
-
-    // Roaming
-    public Vector3 walkPoint;
+    // Position of player.
+    Vector3 playerPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -48,13 +45,11 @@ public class EnemyAI : MonoBehaviour, IDamage
     {
         if (playerInRange)
         {
-            playerDirection = GameManager.Instance.player.transform.position;
             TargetPlayer();
         }
-        
     }
     
-    // Detects Player when he enters the
+    // Detects Player when he enters the Sphere Collider
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -63,6 +58,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         }
     }
 
+    // Sphere Collider Exit
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -71,9 +67,11 @@ public class EnemyAI : MonoBehaviour, IDamage
         }
     }
 
+    //Targerts the Player and shoots.
     private void TargetPlayer()
     {
-        agent.SetDestination(playerDirection - transform.position);
+        playerPosition = GameManager.Instance.player.transform.position;
+        agent.SetDestination(playerPosition - transform.position);
 
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
@@ -86,12 +84,14 @@ public class EnemyAI : MonoBehaviour, IDamage
         }
     }
 
+    // Faces the Target
     void FaceTarget()
     {
-        Quaternion rot = Quaternion.LookRotation(playerDirection);
+        Quaternion rot = Quaternion.LookRotation(playerPosition);
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
     }
 
+    // Takes Damage
     public void TakeDamage(int amount)
     {
         health -= amount;
@@ -104,6 +104,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         }
     }
 
+    // Flashes Red
     IEnumerator FlashRed()
     {
         model.material.color = Color.red;
@@ -111,6 +112,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         model.material.color = origColor;
     }
 
+    // Shoots
     IEnumerator Shoot()
     {
         isShooting = true;
