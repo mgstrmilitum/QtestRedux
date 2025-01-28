@@ -1,62 +1,63 @@
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 
-public class playerController : MonoBehaviour, IDamage, IPickup
+public class playerController : MonoBehaviour, IDamage
 {
-    [Header("-----Components-----")]
+    [Header("Components")]
     [SerializeField] CharacterController controller;
     [SerializeField] LayerMask ignoreMask;
-    [SerializeField] Rigidbody rb;
-    [SerializeField] Transform playerCenter;
-    [SerializeField] float groundingDistance;
-    [SerializeField] Material mat;
-    [SerializeField] AudioSource audio;
-    [Header("-----Stats-----")]
+    [SerializeField] GameObject muzzleFlash;
+
+    [Header("Stats")]
     [SerializeField] int speed;
-    [SerializeField] int sprintMod;
+    [Range(1,10)][SerializeField] int sprintMod;
     [SerializeField] int crouchMod;
     [SerializeField] int jumpMax;
     [SerializeField] int jumpSpeed;
     [SerializeField] float timeForJumpBoost;
     [SerializeField] int gravity;
-    [SerializeField] int health;
-    [SerializeField] int armor;
-    [SerializeField] int jumpSpeedMod;
-    [SerializeField] int jumpCount = 0;
-    [Header("-----Guns-----")]
-    [SerializeField] int shootDamage;
-    [SerializeField] int shootDistance;
+    [Range(1, 10)][SerializeField] int health;
+    [Range(1, 10)][SerializeField] int armor;
+    int shootDamage;
+    int shootDistance;
+    int jumpSpeedMod;
+    [SerializeField] Rigidbody rb;
+    [SerializeField] Transform playerCenter;
+    [SerializeField] float groundingDistance;
     [SerializeField] float shootRate;
-    [SerializeField] GameObject gunModel;
-    [SerializeField] GameObject muzzleFlash;
+    [SerializeField] Material mat;
+    [SerializeField] AudioSource aud;
+
+    [Header("Guns")]
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
-    [Header("-----Audio-----")]
-    [SerializeField] AudioClip[] audioHurt;
-    [SerializeField] float audioHurtVolume;
-    [SerializeField] AudioClip[] audioSteps;
-    [SerializeField] float audioStepsVolume;
-    
-    
+
+    [Header("Audio")]
+    [SerializeField] AudioClip[] audSteps;
+    [SerializeField][Range(0, 1)] float audStepsVol;
+    [SerializeField] AudioClip[] audHurt;
+    [SerializeField] [Range(0,1)] float audHurtVol;
+    [SerializeField] AudioClip[] audJump;
+    [SerializeField][Range(0, 1)] float audJumpVol;
+
+    [SerializeField]int jumpCount = 0;
     int hpOriginal;
     float timeGrounded = 0f;
+    float shootTimer = 0f;
     int gunListPos;
-
     public LayerMask groundLayer;
     public Vector3 moveDirection;
     public Vector3 playerVelocity;
 
     bool isSprinting = false;
+    bool isPlayingSteps;
     bool justLanded = false;
     public bool isLanded = false;
-    float shootTimer;
 
     bool hasQuad;
     public bool hasInvis;
-    bool isPlayingSteps;
 
     Color myColor;
 
@@ -67,22 +68,16 @@ public class playerController : MonoBehaviour, IDamage, IPickup
         myColor = mat.color;
         hpOriginal = health;
         UpdatePlayerUI();
-        
+        shootTimer = shootRate;
     }
 
     // Update is called once per frame
     void Update()
     {
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.blue);
-
-        if(!GameManager.Instance.isPaused)
-        {
-            Movement();
-            SelectGun();
-        }
-        
         Movement();
         Crouch();
+        shootTimer += Time.deltaTime;
         if(hasInvis)
         {
             StartCoroutine(Invisibility());
@@ -135,12 +130,17 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     void Movement()
     {
         StartCoroutine(DecreaseMegaHealthArmor());
-        //if (controller.isGrounded)
-        //{
-        //    jumpCount = 0;
-        //    playerVelocity = Vector3.zero;
-        //    //timeGrounded = 0f;
-        //}
+        if (controller.isGrounded)
+        {
+            jumpCount = 0;
+            playerVelocity = Vector3.zero;
+            //timeGrounded = 0f;
+
+            if (moveDirection.magnitude > 0.3f && !isPlayingSteps)
+            {
+                StartCoroutine(PlaySteps());
+            }
+        }
 
         timeGrounded += Time.deltaTime;
         //moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -169,26 +169,23 @@ public class playerController : MonoBehaviour, IDamage, IPickup
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, yVelo, rb.linearVelocity.z);
         }
         rb.angularVelocity = Vector3.zero;
-        if(Input.GetButtonDown("Fire1"))
+        if(Input.GetButton("Fire1") && gunList.Count > 0 && shootTimer >= shootRate)
         {
             Shoot();
         }
+
     }
 
-    IEnumerator playSteps()
+    IEnumerator PlaySteps()
     {
         isPlayingSteps = true;
-
-        audio.PlayOneShot(audioSteps[Random.Range(0, audioSteps.Length)], audioStepsVolume);
-
-        if(!isSprinting)
-        {
+        aud.PlayOneShot(audSteps[Random.Range(0, audSteps.Length)], audStepsVol);
+        if (!isSprinting)
             yield return new WaitForSeconds(0.5f);
-        }
         else
-        {
             yield return new WaitForSeconds(0.3f);
-        }
+
+        isPlayingSteps = false;
     }
 
     void Jump()
@@ -210,6 +207,7 @@ public class playerController : MonoBehaviour, IDamage, IPickup
             ++jumpCount;
             isLanded = false;
             rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
+            aud.PlayOneShot(audJump[Random.Range(0, audJump.Length)], audJumpVol);
             //rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpSpeed, rb.linearVelocity.z);
         }
     }
@@ -245,34 +243,29 @@ public class playerController : MonoBehaviour, IDamage, IPickup
 
     void Shoot()
     {
-        shootTimer = 0;
-        audio.PlayOneShot(gunList[gunListPos].shootSound[Random.Range(0, gunList[gunListPos].shootSound.Length)], gunList[gunListPos].shootSoundVol);
-
         RaycastHit hit;
-        
-        if(gunList.Count > 0)
+        shootTimer = 0f;
+        aud.PlayOneShot(gunList[gunListPos].shootSound[Random.Range(0, gunList[gunListPos].shootSound.Length)], gunList[gunListPos].shootSoundVolume);
+        StartCoroutine(FlashMuzzle());
+
+        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDistance, ~ignoreMask))
         {
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDistance, ~ignoreMask))
+            Debug.Log("Hit a " + hit.collider.name + "!");
+            Instantiate(gunList[gunListPos].hitEffect, hit.point, Quaternion.identity);
+
+            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            if(dmg != null)
             {
-                Debug.Log("Hit a " + hit.collider.name + "!");
-
-                Instantiate(gunList[gunListPos].hitEffect, hit.point, Quaternion.identity);
-                StartCoroutine(FlashMuzzleFire());
-
-                IDamage dmg = hit.collider.GetComponent<IDamage>();
-                if (dmg != null)
-                {
-                    dmg.TakeDamage(shootDamage);
-                }
+                dmg.TakeDamage(shootDamage);
             }
         }
         //Do feedback as quickly as you can!
     }
 
-    IEnumerator FlashMuzzleFire()
+    IEnumerator FlashMuzzle()
     {
         muzzleFlash.SetActive(true);
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(.05f);
         muzzleFlash.SetActive(false);
     }
 
@@ -280,8 +273,7 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     {
         health -= amount;
         UpdatePlayerUI();
-        audio.PlayOneShot(audioHurt[Random.Range(0, audioHurt.Length)], audioHurtVolume);
-
+        aud.PlayOneShot(audHurt[Random.Range(0, audHurt.Length)], audHurtVol);
         StartCoroutine(FlashDamagePanel());
         if(health <= 0)
         {
@@ -299,13 +291,6 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     void UpdatePlayerUI()
     {
         GameManager.Instance.playerHealthBar.fillAmount = (float)health / hpOriginal;
-    }
-
-    public void GetGunStats(GunStats gun)
-    {
-        shootDamage = gun.shootDamage;
-        shootDistance = gun.shootDistance;
-        shootRate = gun.shootRate;
     }
 
     IEnumerator QuickJump()
@@ -360,35 +345,5 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     IEnumerator QuadDamage()
     {
         yield return new WaitForSeconds(0f);
-    }
-
-    public void GetGunStats(GunStats gun)
-    {
-        gunList.Add(gun);
-        gunListPos = gunList.Count - 1;
-
-        ChangeGun();
-    }
-
-    void SelectGun()
-    {
-        if(Input.GetAxis("Mouse Scrollwheel") > 0 && gunListPos < gunList.Count-1)
-        {
-            gunListPos++;
-        }
-        else if(Input.GetAxis("Mouse Scrollwheel") < 0 && gunListPos > 0)
-        { 
-            gunListPos--;
-        }
-    }
-
-    void ChangeGun()
-    {
-        shootDamage = gunList[gunListPos].shootDamage;
-        shootDistance = gunList[gunListPos].shootDist;
-        shootRate = gunList[gunListPos].shootRate;
-
-        gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunListPos].model.GetComponent<MeshFilter>().sharedMesh;
-        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunListPos].model.GetComponent<MeshRenderer>().sharedMaterial;
     }
 }

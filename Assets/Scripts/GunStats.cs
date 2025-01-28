@@ -6,11 +6,10 @@ public class GunStats : ScriptableObject
 {
     public GameObject model;
     public int shootDamage;
-    public int shootDist;
+    public int shootDistance;
     public float shootRate;
-    public int ammoCur, ammoMax;
-
+    public int ammoCurrent, ammoMax;
     public ParticleSystem hitEffect;
-    public AudioClip[] shootSound;
-    public float shootSoundVol;
+    public AudioClip[] shootSound; //different sound for end of magazine?
+    public float shootSoundVolume;
 }

@@ -4,28 +4,27 @@ public class Spawner : MonoBehaviour
 {
     [SerializeField] GameObject objectToSpawn;
     [SerializeField] int numToSpawn;
-    [SerializeField] int timeBetweenSpawns;
-    [SerializeField] Transform[] spawnPos;
+    [SerializeField] float spawnRate;
+    [SerializeField] Transform[] spawnPoints;
 
+    float spawnTimer;
     int spawnCount;
 
     bool startSpawning;
-    float spawnTimer;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        spawnTimer = 0f;
         GameManager.Instance.UpdateGameGoal(numToSpawn);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(startSpawning)
         {
             spawnTimer += Time.deltaTime;
 
-            if(spawnCount < numToSpawn && spawnTimer > timeBetweenSpawns)
+            if(spawnCount < numToSpawn && spawnTimer >= spawnRate)
             {
                 Spawn();
             }
@@ -34,7 +33,7 @@ public class Spawner : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if(other.CompareTag("Player"))
         {
             startSpawning = true;
         }
@@ -42,10 +41,10 @@ public class Spawner : MonoBehaviour
 
     void Spawn()
     {
-        int spawnInt = Random.Range(0, spawnPos.Length);
+        int spawnInt = Random.Range(0, spawnPoints.Length);
 
-        spawnTimer = 0;
-        Instantiate(objectToSpawn, spawnPos[spawnInt].position, spawnPos[spawnInt].rotation);
+        Instantiate(objectToSpawn, spawnPoints[spawnInt].position, spawnPoints[spawnInt].rotation);
         spawnCount++;
+        spawnTimer = 0f;
     }
 }

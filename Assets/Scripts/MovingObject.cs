@@ -25,5 +25,13 @@ public class MovingObject : MonoBehaviour
         transform.position = Vector3.Lerp(pointA, pointB, time);
     }
 
-    
+    private void OnCollisionEnter(Collision collision)
+    {
+        collision.transform.SetParent(transform);
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        collision.transform.SetParent(null);
+    }
 }

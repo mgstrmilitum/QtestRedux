@@ -1,4 +1,4 @@
-/*using UnityEngine;
+using UnityEngine;
 
 public class Shield : MonoBehaviour, IPickup
 {
@@ -32,4 +32,4 @@ public class Shield : MonoBehaviour, IPickup
 
         }
     }
-}*/
+}

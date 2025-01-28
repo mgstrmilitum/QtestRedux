@@ -28,4 +28,11 @@ public class ButtonFunctions : MonoBehaviour
         Application.Quit();
     #endif
     }
+
+    public void QuitToMenu()
+    {
+
+        SceneManager.LoadSceneAsync(0);
+
+    }
 }
