@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public class pickup : MonoBehaviour
+public class Pickup : MonoBehaviour
 {
     [SerializeField] GunStats gun;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,14 +13,10 @@ public class pickup : MonoBehaviour
     {
         IPickup pick = other.GetComponent<IPickup>();
 
-        if (other.CompareTag("Player")) 
+        if(pick != null)
         {
-<<<<<<< Updated upstream:Assets/Scripts/pickup.cs
-            pick.GetGunStats(gun);
-=======
             //transfer gun to the IPickup object
-            pick.OnPickup(other);
->>>>>>> Stashed changes:Assets/Scripts/Pickup.cs
+            pick.GetGunStats(gun);
             Destroy(gameObject);
         }
     }
