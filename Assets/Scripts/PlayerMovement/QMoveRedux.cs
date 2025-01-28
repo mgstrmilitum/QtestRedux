@@ -61,7 +61,7 @@ public class QMoveRedux : MonoBehaviour, IDamage
 
     private void OnDisable()
     {
-        //playerControls.Disable();
+        inputActions.Disable();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -108,14 +108,14 @@ public class QMoveRedux : MonoBehaviour, IDamage
         forceDirection += moveDirection.x * strafeSpeed * transform.right * Time.deltaTime;
         forceDirection += moveDirection.y * forwardBackSpeed * transform.forward * Time.deltaTime;
         
-        if (isSprinting)
-        {
-            forceDirection *= sprintMultiplier;
-        }
-        else if (isCrouching)
-        {
-            forceDirection *= crouchMultiplier;
-        }
+        //if (isSprinting)
+        //{
+        //    forceDirection *= sprintMultiplier;
+        //}
+        //else if (isCrouching)
+        //{
+        //    forceDirection *= crouchMultiplier;
+        //}
         rb.AddForce(forceDirection * movementSpeed * Time.deltaTime, ForceMode.Impulse);
         //rb.AddForceAtPosition(forceDirection * movementSpeed * Time.deltaTime, centerOfMass.position, ForceMode.Impulse);
         forceDirection = Vector3.zero;
@@ -163,10 +163,11 @@ public class QMoveRedux : MonoBehaviour, IDamage
     void Crouch(InputAction.CallbackContext ctx)
     {
         isCrouching = true;
+        Debug.Log("Crouching!");
     }
 
     void Sprint(InputAction.CallbackContext ctx)
-    {
+    { 
         isSprinting = true;
     }
 
@@ -178,6 +179,7 @@ public class QMoveRedux : MonoBehaviour, IDamage
     void UnCrouch(InputAction.CallbackContext ctx)
     {
         isCrouching = false;
+        Debug.Log("Uncrouching!");
     }
 
     void PerformGravity()

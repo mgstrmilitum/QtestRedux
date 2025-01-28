@@ -3,7 +3,10 @@ using UnityEngine;
 
 public class MovingObject : MonoBehaviour
 {
+    enum ObjectType
+    {
 
+    }
     [SerializeField] float speed;
     [SerializeField] Vector3 targetPos;
     Vector3 pointA;
@@ -27,8 +30,8 @@ public class MovingObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
-            other.transform.SetParent(transform);
+        //if (other.gameObject.CompareTag("Player"))
+        //    other.transform.SetParent(transform);
     }
 
     private void OnTriggerExit(Collider other)

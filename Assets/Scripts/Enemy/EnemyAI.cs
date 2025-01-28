@@ -3,13 +3,21 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyAI : MonoBehaviour, IDamage
+public class EnemyAI : MonoBehaviour, IDamage, IOpen
 {
+    enum EnemyType
+    {
+        Standard,
+        Grenade,
+        Melee
+    }
+
     [SerializeField] int hp;
     [SerializeField] Renderer model;
     [SerializeField] Transform shootPos;
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
+    [SerializeField] float meleeRate;
     [SerializeField] public NavMeshAgent agent;
     [SerializeField] int faceTargetSpeed;
     [SerializeField] int fov;
@@ -18,10 +26,12 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] Animator animatorController;
     [SerializeField] int animSpeedTrans;
     [SerializeField] int roamDistance;
+    [SerializeField] float grenadeSpeed;
 
     float angleToPlayer;
     float stoppingDistanceOrig;
     bool isShooting;
+    bool isMelee;
     bool playerInRange;
     bool isRoaming;
     Color originalColor;
@@ -31,6 +41,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     Coroutine co;
 
     [SerializeField]
+    EnemyType enemyType;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -100,9 +111,13 @@ public class EnemyAI : MonoBehaviour, IDamage
                 {
                     FaceTarget();
                 }
-                if (!isShooting)
+                if (!isShooting && enemyType != EnemyType.Melee)
                 {
                     StartCoroutine(Shoot());
+
+                }
+                else if(!isMelee && enemyType == EnemyType.Melee)
+                {
 
                 }
 
@@ -157,9 +172,22 @@ public class EnemyAI : MonoBehaviour, IDamage
     IEnumerator Shoot()
     {
         isShooting = true;
-        Instantiate(bullet, shootPos.position, transform.rotation);
+        GameObject obj = Instantiate(bullet, shootPos.position, transform.rotation);
+        if (enemyType == EnemyType.Grenade)
+        {
+            //add short-medium-long range speeds based on distance between
+            //AI and character??
+            obj.GetComponent<Rigidbody>().AddForce(Vector3.forward * grenadeSpeed, ForceMode.Impulse);
+        }
         yield return new WaitForSeconds(shootRate);
         isShooting = false;
+    }
+
+    IEnumerator Melee()
+    {
+        isMelee = true;
+        yield return new WaitForSeconds(meleeRate);
+        isMelee = false;
     }
 
     void FaceTarget()

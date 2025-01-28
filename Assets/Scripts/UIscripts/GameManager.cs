@@ -11,16 +11,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuActive;
+
     [SerializeField] AudioSource audioSource;
     [SerializeField] float songTimer;
     [SerializeField] float songLength;
 
     [SerializeField] public float worldGravity;
     [SerializeField] public bool devMode = false;
+
     
     [SerializeField] TMP_Text goalCountText;
     public Image playerHealthBar;
     public Image playerShieldBar;
+    [SerializeField] public GameObject buttonInteract;
+    [SerializeField] public TMP_Text buttonInfo;
 
     public GameObject damagePanel;
 

@@ -29,7 +29,6 @@ struct AmmoCount
     public int numLightning;
     public int numSlugs;
     public int numCells;
-
 }
 
 public class QMove : MonoBehaviour, IDamage, IPickup
@@ -69,7 +68,7 @@ public class QMove : MonoBehaviour, IDamage, IPickup
     public bool shieldActive;
     [SerializeField] int health;
     [SerializeField] int maxShield, currentShield;
-
+    AmmoCount ammo;
     //gun info
     [SerializeField] int shootDamage;
     [SerializeField] int shootDistance;
@@ -98,6 +97,7 @@ public class QMove : MonoBehaviour, IDamage, IPickup
         originalHealth = health;
         currentShield = maxShield;
         UpdatePlayerUI();
+
         //working on dev mode (show movement meta data, turn ammo infinite, 999 shields/health, etc)
     }
     void Update()
