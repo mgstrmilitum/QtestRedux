@@ -48,6 +48,26 @@ public class QMove : MonoBehaviour
     [SerializeField] float jumpSpeed = 8f;
     [SerializeField] bool holdJumpToBhop = false;
     [SerializeField] float playerFriction = 0f;
+<<<<<<< Updated upstream
+=======
+    public bool wishJump = false;
+    Vector3 moveDirectionNorm = Vector3.zero;
+    public Vector3 playerVelocity = Vector3.zero;
+    [SerializeField] float playerTopVelocity = 0f;
+    [SerializeField] int crouchSpeedFactor; //2 halves speed, 4 quarters speed, etc
+    [SerializeField] float crouchScaleFactor; //how much character controller component is shrunk (1 halves character, .5 is 1/4th size, etc)
+    bool isSprinting = false;
+    [SerializeField] float sprintSpeedFactor; //2 doubles run speed, 4 quadruples, etc
+    bool isSliding = false;
+
+
+    //health/shield info
+    int originalHealth;
+    public bool shieldActive;
+    [SerializeField] int health;
+    [SerializeField] int maxShield, currentShield;
+
+>>>>>>> Stashed changes
     //camera rotations
     float rotX;
     float rotY;

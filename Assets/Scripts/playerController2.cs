@@ -301,6 +301,13 @@ public class playerController : MonoBehaviour, IDamage, IPickup
         GameManager.Instance.playerHealthBar.fillAmount = (float)health / hpOriginal;
     }
 
+    public void GetGunStats(GunStats gun)
+    {
+        shootDamage = gun.shootDamage;
+        shootDistance = gun.shootDistance;
+        shootRate = gun.shootRate;
+    }
+
     IEnumerator QuickJump()
     {
         if (Input.GetButtonDown("Jump") && jumpCount < jumpMax && justLanded == true)

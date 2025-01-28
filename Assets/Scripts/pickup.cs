@@ -16,7 +16,12 @@ public class pickup : MonoBehaviour
 
         if (other.CompareTag("Player")) 
         {
+<<<<<<< Updated upstream:Assets/Scripts/pickup.cs
             pick.GetGunStats(gun);
+=======
+            //transfer gun to the IPickup object
+            pick.OnPickup(other);
+>>>>>>> Stashed changes:Assets/Scripts/Pickup.cs
             Destroy(gameObject);
         }
     }
