@@ -28,7 +28,11 @@ public class MovingObject : MonoBehaviour
         transform.position = Vector3.Lerp(pointA, pointB, time);
     }
 
+<<<<<<< HEAD:Assets/Scripts/LevelRelated/MovingObject.cs
     private void OnTriggerEnter(Collider other)
+=======
+    /*private void OnCollisionEnter(Collision collision)
+>>>>>>> LightChristinzioBranch:Assets/Scripts/MovingObject.cs
     {
         if (other.gameObject.CompareTag("Player"))
             other.transform.SetParent(transform);
@@ -38,7 +42,12 @@ public class MovingObject : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+<<<<<<< HEAD:Assets/Scripts/LevelRelated/MovingObject.cs
         if (other.gameObject.CompareTag("Player"))
             other.transform.SetParent(null);
     }
+=======
+        collision.transform.SetParent(null);
+    }*/
+>>>>>>> LightChristinzioBranch:Assets/Scripts/MovingObject.cs
 }

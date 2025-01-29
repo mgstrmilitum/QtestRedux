@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 
 
@@ -31,15 +32,15 @@ struct AmmoCount
     public int numCells;
 }
 
-public class QMove : MonoBehaviour, IDamage, IPickup
+public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
 {
     //movement/control related
     public CharacterController controller;
     [SerializeField] Transform playerView;
     [SerializeField] float gravity = 20f;
     [SerializeField] float friction = 6f;
-    [SerializeField] float xMouseSensitivity = 30f; //change these default values to be inside of the Unity editor
-    [SerializeField] float yMouseSensitivity = 30f;
+    [SerializeField] public float xMouseSensitivity = 2f;
+    [SerializeField] public float yMouseSensitivity = 2f;
     [SerializeField] float moveSpeed = 7f;
     [SerializeField] float runAcceleration = 14f;
     [SerializeField] float runDeacceleration = 10f;
@@ -50,11 +51,13 @@ public class QMove : MonoBehaviour, IDamage, IPickup
     [SerializeField] float sideStrafeSpeed = 1f;
     [SerializeField] float jumpSpeed = 8f;
     [SerializeField] bool holdJumpToBhop = false;
-    [SerializeField] bool invertLook = false;
+
+    [SerializeField] public bool invertLook = false;
+
     [SerializeField] float playerFriction = 0f;
     public bool wishJump = false;
     Vector3 moveDirectionNorm = Vector3.zero;
-    Vector3 playerVelocity = Vector3.zero;
+    public Vector3 playerVelocity = Vector3.zero;
     [SerializeField] float playerTopVelocity = 0f;
     [SerializeField] int crouchSpeedFactor; //2 halves speed, 4 quarters speed, etc
     [SerializeField] float crouchScaleFactor; //how much character controller component is shrunk (1 halves character, .5 is 1/4th size, etc)
@@ -68,6 +71,7 @@ public class QMove : MonoBehaviour, IDamage, IPickup
     public bool shieldActive;
     [SerializeField] int health;
     [SerializeField] int maxShield, currentShield;
+<<<<<<< HEAD:Assets/Scripts/PlayerMovement/QMove.cs
     AmmoCount ammo;
     //gun info
     [SerializeField] int shootDamage;
@@ -77,6 +81,8 @@ public class QMove : MonoBehaviour, IDamage, IPickup
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
 
     int gunListPos;
+=======
+>>>>>>> LightChristinzioBranch:Assets/Scripts/QMove.cs
 
     //camera rotations
     float rotX;
@@ -94,6 +100,7 @@ public class QMove : MonoBehaviour, IDamage, IPickup
 
     void Start()
     {
+        AssignSettings();
         originalHealth = health;
         currentShield = maxShield;
         UpdatePlayerUI();
@@ -114,50 +121,44 @@ public class QMove : MonoBehaviour, IDamage, IPickup
                 dt -= 1f / fpsDisplayRate;
             }
         }
-        if(!GameManager.Instance.isPaused)
+        ShieldBehavior();
+        if (!GameManager.Instance.isPaused)
         {
-            ShieldBehavior();
-            if (!GameManager.Instance.isPaused)
+            rotX -= Input.GetAxisRaw("Mouse Y") * xMouseSensitivity;
+            rotY += Input.GetAxisRaw("Mouse X") * yMouseSensitivity;
+
+            if (rotX < -90)
             {
-                rotX -= Input.GetAxisRaw("Mouse Y") * xMouseSensitivity;
-                rotY += Input.GetAxisRaw("Mouse X") * yMouseSensitivity;
-
-                if (rotX < -90)
-                {
-                    rotX = -90;
-                }
-                else if (rotX > 90)
-                {
-                    rotX = 90;
-                }
-
-                this.transform.rotation = Quaternion.Euler(0, rotY, 0);
-                if (invertLook)
-                {
-                    playerView.rotation = Quaternion.Euler(-rotX, rotY, 0);
-                }
-                else
-                {
-                    playerView.rotation = Quaternion.Euler(rotX, rotY, 0);
-                }
-
-                QueueJump();
-
-                if (controller.isGrounded)
-                {
-                    GroundMove();
-                }
-                else
-                {
-                    AirMove();
-                }
-
-                controller.Move(playerVelocity * Time.deltaTime);
+                rotX = -90;
+            }
+            else if (rotX > 90)
+            {
+                rotX = 90;
             }
 
-            SelectGun();
+            this.transform.rotation = Quaternion.Euler(0, rotY, 0);
+            if (invertLook)
+            {
+                playerView.rotation = Quaternion.Euler(-rotX, rotY, 0);
+            }
+            else
+            {
+                playerView.rotation = Quaternion.Euler(rotX, rotY, 0);
+            }
+
+            QueueJump();
+
+            if (controller.isGrounded)
+            {
+                GroundMove();
+            }
+            else
+            {
+                AirMove();
+            }
+
+            controller.Move(playerVelocity * Time.deltaTime);
         }
-        
     }
 
     private void SetMovementDir()
@@ -304,6 +305,7 @@ public class QMove : MonoBehaviour, IDamage, IPickup
         {
             wishspeed /= sprintSpeedFactor;
         }
+
         #endregion
 
         #region Crouch/Uncrouch
@@ -321,9 +323,6 @@ public class QMove : MonoBehaviour, IDamage, IPickup
             Debug.Log("Standing again!");
         }
         #endregion
-
-        //for baseball slide...
-        //increase friction and decrease char controller.height?
 
         Accelerate(wishdir, wishspeed, runAcceleration);
 
@@ -453,40 +452,6 @@ public class QMove : MonoBehaviour, IDamage, IPickup
         }
     }
 
-    public void GetGunStats(GunStats gun)
-    {
-        gunList.Add(gun); //add a check to make sure we don't already have this gun
-        gunListPos = gunList.Count - 1;
-        ChangeGun();
-    }
-
-    void SelectGun()
-    {
-        if(Input.GetAxis("Mouse ScrollWheel") > 0 && gunListPos < gunList.Count - 1) //possibly add scroll up to zero at this point
-        {
-            gunListPos++;
-            ChangeGun();
-        }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && gunListPos > 0)
-        {
-            gunListPos--;
-            ChangeGun();
-        }
-    }
-
-    void ChangeGun()
-    {   
-        //change gun-related stats
-        shootDamage = gunList[gunListPos].shootDamage;
-        shootDistance = gunList[gunListPos].shootDistance;
-        shootRate = gunList[gunListPos].shootRate;
-
-        //change the gun model
-        gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunListPos].model.GetComponent<MeshFilter>().sharedMesh;
-        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunListPos].model.GetComponent<MeshRenderer>().sharedMaterial;
-
-    }
-
     //Comment this function out if in Dev Mode!!!
     private void OnGUI()
     {
@@ -495,5 +460,34 @@ public class QMove : MonoBehaviour, IDamage, IPickup
         ups.y = 0;
         GUI.Label(new Rect(0, 15, 400, 100), "Speed: " + Mathf.Round(ups.magnitude * 100) / 100 + "ups", style);
         GUI.Label(new Rect(0, 30, 400, 100), "Top Speed: " + Mathf.Round(playerTopVelocity * 100) / 100 + "ups", style);
+    }
+
+   public void AddHealth(int amount)
+    {
+        health += amount;
+        if (health > 100) { health = 100; }
+        UpdatePlayerUI();
+    }
+    public void OnPickup(Collider other)
+    {
+
+    }
+
+    public void AdjustSens(float amount)
+    {
+        xMouseSensitivity = amount;
+        yMouseSensitivity = amount;
+    }
+
+    public void InvertLook ()
+    {
+        invertLook = !invertLook;
+    }
+
+public void AssignSettings()
+    {
+        xMouseSensitivity = PlayerPrefs.GetFloat("mouseSens", 2);
+        yMouseSensitivity = PlayerPrefs.GetFloat("mouseSens", 2);
+        invertLook = (PlayerPrefs.GetInt("invertAxis", 0) != 0);
     }
 }

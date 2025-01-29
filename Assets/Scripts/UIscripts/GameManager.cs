@@ -27,12 +27,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] public TMP_Text buttonInfo;
 
     public GameObject damagePanel;
+    public GameObject interactButton;
+    public TMP_Text buttonInfo;
 
     public GameObject player;
     public playerController playerScript;
 
     public bool isPaused = false;
-    int goalCount;
+    public int goalCount;
 
     // Start is called before the first frame update
     void Awake()

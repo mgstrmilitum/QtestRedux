@@ -14,11 +14,18 @@ public class Damage : MonoBehaviour
 
     [SerializeField] DamageType type;
     [SerializeField] Rigidbody rb;
+<<<<<<< HEAD:Assets/Scripts/ShootingRelated/Damage.cs
     [SerializeField] EnemyAI meleeAI;
+=======
+    [SerializeField] bool isLava;
+>>>>>>> LightChristinzioBranch:Assets/Scripts/Damage.cs
 
     [SerializeField] int damageAmount;
     [SerializeField] int speed;
     [SerializeField] int destroyTime;
+    [SerializeField] float damageDelay;
+
+    float localDamageDelay;
 
     public bool isAttacking;
 
@@ -30,6 +37,7 @@ public class Damage : MonoBehaviour
         {
             Destroy(gameObject, destroyTime);
         }
+        localDamageDelay = damageDelay;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -41,7 +49,7 @@ public class Damage : MonoBehaviour
 
         IDamage dmg = other.GetComponent<IDamage>();
 
-        if(dmg != null)
+        if (dmg != null)
         {
             if (type == DamageType.Melee)
             {
@@ -57,9 +65,32 @@ public class Damage : MonoBehaviour
             }
         }
 
-        if(type == DamageType.Moving)
+        if (type == DamageType.Moving)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.isTrigger)
+        {
+            return;
+        }
+
+        IDamage dmg = other.GetComponent<IDamage>();
+
+        if (dmg != null && isLava == true)
+        {
+            if (localDamageDelay <= 0)
+            {
+                dmg.TakeDamage(damageAmount);
+                localDamageDelay = damageDelay;
+            }
+            else
+            {
+                localDamageDelay -= Time.deltaTime;
+            }
         }
     }
 }
