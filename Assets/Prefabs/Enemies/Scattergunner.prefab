@@ -731,7 +731,7 @@ GameObject:
   - component: {fileID: 3090481484604701043}
   m_Layer: 0
   m_Name: Scattergunner
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -793,7 +793,6 @@ MonoBehaviour:
   bullet: {fileID: 6299318728652817414, guid: dad23a490351d9944902db202b8b1a48, type: 3}
   shootRate: 6
   meleeRate: 0
-  meleeAttackDistance: 0
   agent: {fileID: 7521096368958418817}
   faceTargetSpeed: 20
   fov: 90

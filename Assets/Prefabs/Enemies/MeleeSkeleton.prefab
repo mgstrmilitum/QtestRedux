@@ -2719,8 +2719,7 @@ MonoBehaviour:
   animatorController: {fileID: 9180823211088344409}
   animSpeedTrans: 1
   roamDistance: 10
-  grenadeSpeed: 0
-  enemyType: 2
+  enemyType: 3
 --- !u!135 &3403808638659138775
 SphereCollider:
   m_ObjectHideFlags: 0

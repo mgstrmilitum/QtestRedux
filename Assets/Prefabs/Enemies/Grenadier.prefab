@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 4554950986599333991}
   m_Layer: 0
   m_Name: Grenadier
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -173,7 +173,6 @@ MonoBehaviour:
   bullet: {fileID: 2262768331657400743, guid: d6df4317c4acf3945968cce29514542e, type: 3}
   shootRate: 2
   meleeRate: 0
-  meleeAttackDistance: 0
   agent: {fileID: 8837348333232358718}
   faceTargetSpeed: 20
   fov: 90
@@ -182,7 +181,6 @@ MonoBehaviour:
   animatorController: {fileID: 7255885598237341545}
   animSpeedTrans: 5
   roamDistance: 10
-  grenadeSpeed: 0
   enemyType: 1
 --- !u!195 &8837348333232358718
 NavMeshAgent:

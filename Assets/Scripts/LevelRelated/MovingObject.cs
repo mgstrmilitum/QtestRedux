@@ -30,14 +30,15 @@ public class MovingObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //if (other.gameObject.CompareTag("Player"))
-        //    other.transform.SetParent(transform);
+        if (other.gameObject.CompareTag("Player"))
+            other.transform.SetParent(transform);
         //NEXT MONTH PLATFORM AND LAVA NEED TO HAVE DIFFERENT SCRIPTS IF WE'RE GOING TO PARENT OBJECT TO PLATFORM
         //Maybe scrap moving platforms for just jump pads?
     }
 
     private void OnTriggerExit(Collider other)
     {
-        //other.transform.SetParent(null);
+        if (other.gameObject.CompareTag("Player"))
+            other.transform.SetParent(null);
     }
 }

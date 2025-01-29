@@ -19,7 +19,6 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
     [SerializeField] float meleeRate;
-    [SerializeField] float meleeAttackDistance;
     [SerializeField] public NavMeshAgent agent;
     [SerializeField] int faceTargetSpeed;
     [SerializeField] int fov;
@@ -32,7 +31,7 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     float angleToPlayer;
     float stoppingDistanceOrig;
     bool isShooting;
-    bool isMelee;
+    public bool isMelee;
     bool playerInRange;
     bool isRoaming;
     Color originalColor;
@@ -46,6 +45,17 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        switch(enemyType)
+        {
+            case EnemyType.Standard:
+                break;
+            case EnemyType.Grenade:
+                model.material.color = Color.blue;
+                break;
+            case EnemyType.Shotgun:
+                model.material.color = Color.black;
+                break;
+        }
         //COMMENT THIS LINE OUT ONCE SPAWNER IS ADDED
         GameManager.Instance.UpdateGameGoal(1);
         originalColor = model.material.color;
@@ -119,9 +129,10 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
                     StartCoroutine(Shoot());
 
                 }
-                else if(enemyType == EnemyType.Melee && Vector3.Distance(GameManager.Instance.player.transform.position, transform.position) <= meleeAttackDistance)
+                else if(enemyType == EnemyType.Melee)
                 {
-                    agent.SetDestination(transform.position);
+                    Debug.Log(agent.remainingDistance);
+                    //agent.SetDestination(transform.position);
                     StartCoroutine(Melee());
                 }
 

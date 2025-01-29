@@ -8,11 +8,13 @@ public class Damage : MonoBehaviour
     enum DamageType
     {
         Moving,
-        Stationary
+        Stationary,
+        Melee
     }
 
     [SerializeField] DamageType type;
     [SerializeField] Rigidbody rb;
+    [SerializeField] EnemyAI meleeAI;
 
     [SerializeField] int damageAmount;
     [SerializeField] int speed;
@@ -41,7 +43,18 @@ public class Damage : MonoBehaviour
 
         if(dmg != null)
         {
-            dmg.TakeDamage(damageAmount);
+            if (type == DamageType.Melee)
+            {
+                if (meleeAI != null)
+                {
+                    if (meleeAI.isMelee)
+                        dmg.TakeDamage(damageAmount);
+                }
+            }
+            else
+            {
+                dmg.TakeDamage(damageAmount);
+            }
         }
 
         if(type == DamageType.Moving)
