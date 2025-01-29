@@ -9,7 +9,7 @@ public class GunScript1 : MonoBehaviour
     public float FireCooldown;
     public float Damage;
     public float BulletRange;
-    public float AmmoShot, Ammoleft;
+     float AmmoShot, Ammoleft;
     [SerializeField] Renderer model;
     Color colorOrginal;
     public GameObject impactEffect;
@@ -27,6 +27,7 @@ public class GunScript1 : MonoBehaviour
     bool shotGun;
     bool IsShooting;
     public bool allowButtonHold;
+   
     void Start()
     {
         currentCooldown = FireCooldown;
@@ -49,7 +50,13 @@ public class GunScript1 : MonoBehaviour
         currentCooldown-=FireCooldown;
         //if (MagaizeSize >0) { mussleflash.Play(); MiniShoot(); Railshoot(); }
         //else { return; }
-        if(Input.GetMouseButtonDown(0)) { MiniShoot(); }
+        if(Input.GetMouseButtonDown(0)) 
+        { if(MagaizeSize>0)
+           {
+            MiniShoot();
+           }
+            
+        }
         for(int i =0; i<400;i++) 
         {
             if (Input.GetButton("Fire2")) { Railshoot(); }
@@ -86,30 +93,8 @@ public class GunScript1 : MonoBehaviour
 
             }
         }
-       
-
-
-        //if (Input.GetButton("Shoot"))
-        //{
-
-        //    Ray gunRay = new Ray(PlayerCamera.position, PlayerCamera.forward);
-
-        //    if (Physics.Raycast(gunRay, out RaycastHit hitInfo, BulletRange))
-        //    {
-        //        if (hitInfo.collider.gameObject.TryGetComponent(out EnemyAI enemy))
-        //        {
-
-        //            enemy.heatlh -= Damage;
-
-        //        }
-                
-        //    }
-
-
-        //}
-
-        //bulletLeft--;
-        //bulletSHot++;
+        MagaizeSize--;
+        
 
     }
     public void Railshoot()
@@ -128,6 +113,11 @@ public class GunScript1 : MonoBehaviour
         bulletSHot++;
     }
 
+    public void AddAmmo(int ammo)
+    {
+        MagaizeSize= MagaizeSize+ ammo;
+
+    }
     //IEnumerator trailShoot()
     //{
     //    IsShooting=true;

@@ -10,7 +10,8 @@ public class Items : MonoBehaviour , IPickup
     {
         Health,
         Shield,
-        Quad
+        Quad,
+        AmmoBullets
     }
 
 
@@ -19,8 +20,8 @@ public class Items : MonoBehaviour , IPickup
         //checking if the object that entered is the player
         if (other.isTrigger) { return; }
         QMove player = other.transform.GetComponent<QMove>();
-        
-        if (player != null)
+        GunScript1 gun= other.transform.GetComponent<GunScript1>();
+        if (player != null || gun!=null)
         {
             switch (ID)
             {
@@ -40,6 +41,10 @@ public class Items : MonoBehaviour , IPickup
                     OnPickup(other);
                     break;
 
+                case ItemIDS.AmmoBullets:
+                    gun.AddAmmo(50);
+                    Destroy(gameObject);
+                    break;
 
             }
         }

@@ -378,49 +378,49 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 529638798512236416, guid: 6f03b8a64e08c434a8c662450a04e16d, type: 3}
+    - target: {fileID: 3216799696619069481, guid: 2dcfa1cc425cdd34a8c1e7ce04f8b087, type: 3}
       propertyPath: m_LocalPosition.x
       value: -13.230757
       objectReference: {fileID: 0}
-    - target: {fileID: 529638798512236416, guid: 6f03b8a64e08c434a8c662450a04e16d, type: 3}
+    - target: {fileID: 3216799696619069481, guid: 2dcfa1cc425cdd34a8c1e7ce04f8b087, type: 3}
       propertyPath: m_LocalPosition.y
       value: 8.740598
       objectReference: {fileID: 0}
-    - target: {fileID: 529638798512236416, guid: 6f03b8a64e08c434a8c662450a04e16d, type: 3}
+    - target: {fileID: 3216799696619069481, guid: 2dcfa1cc425cdd34a8c1e7ce04f8b087, type: 3}
       propertyPath: m_LocalPosition.z
       value: 20.673643
       objectReference: {fileID: 0}
-    - target: {fileID: 529638798512236416, guid: 6f03b8a64e08c434a8c662450a04e16d, type: 3}
+    - target: {fileID: 3216799696619069481, guid: 2dcfa1cc425cdd34a8c1e7ce04f8b087, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 529638798512236416, guid: 6f03b8a64e08c434a8c662450a04e16d, type: 3}
+    - target: {fileID: 3216799696619069481, guid: 2dcfa1cc425cdd34a8c1e7ce04f8b087, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 529638798512236416, guid: 6f03b8a64e08c434a8c662450a04e16d, type: 3}
+    - target: {fileID: 3216799696619069481, guid: 2dcfa1cc425cdd34a8c1e7ce04f8b087, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 529638798512236416, guid: 6f03b8a64e08c434a8c662450a04e16d, type: 3}
+    - target: {fileID: 3216799696619069481, guid: 2dcfa1cc425cdd34a8c1e7ce04f8b087, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 529638798512236416, guid: 6f03b8a64e08c434a8c662450a04e16d, type: 3}
+    - target: {fileID: 3216799696619069481, guid: 2dcfa1cc425cdd34a8c1e7ce04f8b087, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 529638798512236416, guid: 6f03b8a64e08c434a8c662450a04e16d, type: 3}
+    - target: {fileID: 3216799696619069481, guid: 2dcfa1cc425cdd34a8c1e7ce04f8b087, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 529638798512236416, guid: 6f03b8a64e08c434a8c662450a04e16d, type: 3}
+    - target: {fileID: 3216799696619069481, guid: 2dcfa1cc425cdd34a8c1e7ce04f8b087, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6891503309227890253, guid: 6f03b8a64e08c434a8c662450a04e16d, type: 3}
       propertyPath: m_Name
-      value: Enemy1
+      value: 'Health Pack '
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
