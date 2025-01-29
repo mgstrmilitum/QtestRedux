@@ -731,7 +731,7 @@ GameObject:
   - component: {fileID: 3090481484604701043}
   m_Layer: 0
   m_Name: Enemy1
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -787,21 +787,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec7b276ebf8eefe42ad16bd2ba599fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 5
-  model: {fileID: 2546498858994776546}
-  shootPos: {fileID: 1672123395022164023}
-  bullet: {fileID: 6299318728652817414, guid: 6024002c8df893b49b98e4b41b118439, type: 3}
-  shootRate: 5
-  meleeRate: 0
   agent: {fileID: 7521096368958418817}
+  model: {fileID: 2546498858994776546}
+  health: 3
   faceTargetSpeed: 20
-  fov: 90
-  roamPauseTime: 3
-  headPos: {fileID: 3292167430466329693}
-  animatorController: {fileID: 2250590198657091848}
-  animSpeedTrans: 1
-  roamDistance: 10
-  enemyType: 0
+  shotPosition: {fileID: 1672123395022164023}
+  bullet: {fileID: 6299318728652817414, guid: 6024002c8df893b49b98e4b41b118439, type: 3}
+  rateOfFire: 1.5
 --- !u!195 &7521096368958418817
 NavMeshAgent:
   m_ObjectHideFlags: 0
