@@ -2137,6 +2137,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 332538847399299127, guid: a6c9c4cc390c4184fa04b1cc8bf6c990, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 687122639532017168, guid: a6c9c4cc390c4184fa04b1cc8bf6c990, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 687122639532017168, guid: a6c9c4cc390c4184fa04b1cc8bf6c990, type: 3}
@@ -7260,6 +7264,11 @@ MonoBehaviour:
   health: 100
   maxShield: 100
   currentShield: 0
+  shootDamage: 0
+  shootDistance: 0
+  shootRate: 0
+  gunModel: {fileID: 0}
+  gunList: []
   fpsDisplayRate: 4
   style:
     m_Name: 

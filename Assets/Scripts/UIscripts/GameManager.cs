@@ -28,10 +28,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject damagePanel;
     public GameObject interactButton;
-    public TMP_Text buttonInfo;
 
     public GameObject player;
-    public playerController playerScript;
+    public QMove playerScript;
 
     public bool isPaused = false;
     public int goalCount;
@@ -41,7 +40,7 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         player = GameObject.FindWithTag("Player");
-        playerScript = player.GetComponent<playerController>();
+        playerScript = player.GetComponent<QMove>();
 
         Time.timeScale = 1f;
         

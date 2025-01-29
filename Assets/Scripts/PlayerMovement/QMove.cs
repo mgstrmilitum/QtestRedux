@@ -71,8 +71,6 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
     public bool shieldActive;
     [SerializeField] int health;
     [SerializeField] int maxShield, currentShield;
-<<<<<<< HEAD:Assets/Scripts/PlayerMovement/QMove.cs
-    AmmoCount ammo;
     //gun info
     [SerializeField] int shootDamage;
     [SerializeField] int shootDistance;
@@ -81,8 +79,6 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
 
     int gunListPos;
-=======
->>>>>>> LightChristinzioBranch:Assets/Scripts/QMove.cs
 
     //camera rotations
     float rotX;

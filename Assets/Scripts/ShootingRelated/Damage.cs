@@ -14,11 +14,8 @@ public class Damage : MonoBehaviour
 
     [SerializeField] DamageType type;
     [SerializeField] Rigidbody rb;
-<<<<<<< HEAD:Assets/Scripts/ShootingRelated/Damage.cs
     [SerializeField] EnemyAI meleeAI;
-=======
     [SerializeField] bool isLava;
->>>>>>> LightChristinzioBranch:Assets/Scripts/Damage.cs
 
     [SerializeField] int damageAmount;
     [SerializeField] int speed;
