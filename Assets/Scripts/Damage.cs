@@ -8,7 +8,8 @@ public class Damage : MonoBehaviour
     enum DamageType
     {
         Moving,
-        Stationary
+        Stationary,
+        Melee
     }
 
     [SerializeField] DamageType type;

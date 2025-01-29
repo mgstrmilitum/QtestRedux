@@ -87,7 +87,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
     [SerializeField] int shootDistance;
     [SerializeField] float shootRate;
     [SerializeField] GameObject gunModel;
-    [SerializeField] List<GunStats> gunList = new List<GunStats>();
+    //[SerializeField] List<GunStats> gunList = new List<GunStats>();
 
     int gunListPos;
 
@@ -439,23 +439,26 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
         float hFraction = (float)health / originalHealth;
         float sFraction = (float)currentShield / maxShield;
 
-       
+
+        if (playerHealthBarBack != null)
+        {
             if (playerHealthBarBack.fillAmount > hFraction)
             {
                 playerHealthBarBack.color = Color.red;
                 playerHealthBar.fillAmount = hFraction;
                 playerHealthBarBack.fillAmount = Mathf.Lerp(playerHealthBarBack.fillAmount, hFraction, Time.deltaTime * healthLerpSpeed);
-             }
-            if (playerHealthBar.fillAmount < hFraction)
+            }
+            else if (playerHealthBarBack != null && playerHealthBar.fillAmount < hFraction)
             {
                 playerHealthBarBack.color = Color.green;
                 playerHealthBarBack.fillAmount = hFraction;
 
                 playerHealthBar.fillAmount = Mathf.Lerp(playerHealthBar.fillAmount, hFraction, Time.deltaTime * healthLerpSpeed);
             }
-        
-        
-        
+        }
+
+        if (playerShieldBarBack != null)
+        {
             if (playerShieldBarBack.fillAmount > sFraction)
             {
                 playerShieldBarBack.color = Color.red;
@@ -469,7 +472,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
 
                 playerShieldBar.fillAmount = Mathf.Lerp(playerShieldBar.fillAmount, sFraction, Time.deltaTime * healthLerpSpeed);
             }
-     
+        }
 
 
        
