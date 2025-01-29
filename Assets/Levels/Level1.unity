@@ -13062,7 +13062,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 3
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -28817,7 +28817,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: cb48724258ef3e041b8d1d8f557c5119, type: 2}
     - target: {fileID: 1634436003736561075, guid: 768ffccb39013944db45d501dfe82dda, type: 3}
       propertyPath: m_fontStyle
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1634436003736561075, guid: 768ffccb39013944db45d501dfe82dda, type: 3}
       propertyPath: m_fontSizeBase
