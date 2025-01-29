@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9036300087808860935}
   - component: {fileID: 1686526229239231356}
   m_Layer: 0
-  m_Name: Bullet
+  m_Name: ShotgunSpread
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,7 +54,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.1
+  m_Radius: 0.3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!96 &4238898794673655636
 TrailRenderer:
@@ -177,9 +177,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   rb: {fileID: 1686526229239231356}
-  damageAmount: 1
+  damageAmount: 3
   speed: 25
-  destroyTime: 3
+  destroyTime: 1
   isAttacking: 0
 --- !u!54 &1686526229239231356
 Rigidbody:

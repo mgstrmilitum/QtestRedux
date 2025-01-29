@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     {
         Standard,
         Grenade,
+        Shotgun,
         Melee
     }
 
@@ -27,7 +28,6 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     [SerializeField] Animator animatorController;
     [SerializeField] int animSpeedTrans;
     [SerializeField] int roamDistance;
-    [SerializeField] float grenadeSpeed;
 
     float angleToPlayer;
     float stoppingDistanceOrig;
@@ -186,7 +186,6 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
 
     IEnumerator Melee()
     {
-        Debug.Log(agent.remainingDistance);
         isMelee = true;
         animatorController.SetTrigger("Attack");
         yield return new WaitForSeconds(meleeRate);

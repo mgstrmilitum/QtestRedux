@@ -229,11 +229,13 @@ public class playerController : MonoBehaviour, IDamage, IOpen
         if (Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
+            audStepsVol *= 1.5f;
             isSprinting = true;
         }
         else if (Input.GetButtonUp("Sprint"))
         {
             speed /= sprintMod;
+            audStepsVol /= 1.5f;
             isSprinting = false;
         }
     }
@@ -244,12 +246,14 @@ public class playerController : MonoBehaviour, IDamage, IOpen
         {
             speed /= crouchMod;
             isCrouching = true;
+            audStepsVol /= 2;
             controller.height = 0.5f;
         }
         else if (Input.GetButtonUp("Crouch"))
         {
             speed *= crouchMod;
             isCrouching = false;
+            audStepsVol *= 2;
             controller.height = 2;
         }
     }
@@ -288,6 +292,7 @@ public class playerController : MonoBehaviour, IDamage, IOpen
         if (shieldActive)
         {
             armor -= amount;
+            Debug.Log("Lost " + amount + " armor");
             if (armor <= 0)
             {
                 DeactivateShield();
@@ -295,8 +300,10 @@ public class playerController : MonoBehaviour, IDamage, IOpen
             UpdatePlayerUI();
             return;
         }
-
-        health -= amount;
+        else
+        {
+            health -= amount;
+        }
         UpdatePlayerUI();
 
 
@@ -357,30 +364,30 @@ public class playerController : MonoBehaviour, IDamage, IOpen
         
     }
 
-        void DeactivateShield()
-        {
-            shieldActive = false;
-        }
+    void DeactivateShield()
+    {
+        shieldActive = false;
+    }
 
-        public void AddShield(int amount)
+    public void AddShield(int amount)
+    {
+        if (armor < maxShield)
         {
-            if (armor < maxShield)
-            {
-                armor += amount;
-                UpdatePlayerUI();
-            }
+            armor += amount;
+            UpdatePlayerUI();
         }
+    }
 
-        IEnumerator Invisibility()
+    IEnumerator Invisibility()
+    {
+        while (hasInvis)
         {
-            while (hasInvis)
-            {
-                mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, .15f);
-                yield return new WaitForSeconds(3f);
-                hasInvis = false;
-            }
-            mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 1f);
+            mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, .15f);
+            yield return new WaitForSeconds(3f);
+            hasInvis = false;
         }
+        mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 1f);
+    }
 
     IEnumerator QuadDamage()
     {

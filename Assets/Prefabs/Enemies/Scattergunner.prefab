@@ -730,7 +730,7 @@ GameObject:
   - component: {fileID: 6298117095926511608}
   - component: {fileID: 3090481484604701043}
   m_Layer: 0
-  m_Name: Enemy1
+  m_Name: Scattergunner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -790,8 +790,8 @@ MonoBehaviour:
   hp: 5
   model: {fileID: 2546498858994776546}
   shootPos: {fileID: 1672123395022164023}
-  bullet: {fileID: 6299318728652817414, guid: 6024002c8df893b49b98e4b41b118439, type: 3}
-  shootRate: 5
+  bullet: {fileID: 6299318728652817414, guid: dad23a490351d9944902db202b8b1a48, type: 3}
+  shootRate: 6
   meleeRate: 0
   meleeAttackDistance: 0
   agent: {fileID: 7521096368958418817}
@@ -802,7 +802,6 @@ MonoBehaviour:
   animatorController: {fileID: 2250590198657091848}
   animSpeedTrans: 1
   roamDistance: 10
-  grenadeSpeed: 0
   enemyType: 0
 --- !u!195 &7521096368958418817
 NavMeshAgent:
@@ -818,7 +817,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 600
-  m_StoppingDistance: 8
+  m_StoppingDistance: 4
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0
   m_AutoRepath: 1
@@ -868,7 +867,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 15
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7139279656255435903
 GameObject:
