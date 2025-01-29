@@ -33,7 +33,7 @@ struct AmmoCount
 
 }
 
-public class QMove : MonoBehaviour, IDamage , IPickup
+public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
 {
     //movement/control related
     public CharacterController controller;
@@ -58,7 +58,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup
     [SerializeField] float playerFriction = 0f;
     public bool wishJump = false;
     Vector3 moveDirectionNorm = Vector3.zero;
-    Vector3 playerVelocity = Vector3.zero;
+    public Vector3 playerVelocity = Vector3.zero;
     [SerializeField] float playerTopVelocity = 0f;
     [SerializeField] int crouchSpeedFactor; //2 halves speed, 4 quarters speed, etc
     [SerializeField] float crouchScaleFactor; //how much character controller component is shrunk (1 halves character, .5 is 1/4th size, etc)

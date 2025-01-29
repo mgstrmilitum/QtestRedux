@@ -20,13 +20,17 @@ public class Door : MonoBehaviour
         {
             if(Input.GetButtonDown("Interact"))
             {
-
+                model.SetActive(false);
+                GameManager.Instance.interactButton.SetActive(false);
+                GameManager.Instance.buttonInfo.text = buttonInfo;
             }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        inTrigger = true;
+
         if (other.isTrigger)
         {
             return;
@@ -36,7 +40,25 @@ public class Door : MonoBehaviour
 
         if (open != null)
         {
+            GameManager.Instance.interactButton.SetActive(true);
+        }
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        inTrigger = false;
+
+        if (other.isTrigger)
+        {
+            return;
+        }
+
+        IOpen open = other.GetComponent<IOpen>();
+
+        if (open != null)
+        {
+            GameManager.Instance.interactButton.SetActive(false);
+            GameManager.Instance.buttonInfo.text = null;
         }
     }
 }
