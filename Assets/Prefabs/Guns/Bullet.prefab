@@ -177,9 +177,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   rb: {fileID: 1686526229239231356}
-  damageAmount: 25
+  damageAmount: 1
   speed: 25
   destroyTime: 3
+  isAttacking: 0
 --- !u!54 &1686526229239231356
 Rigidbody:
   m_ObjectHideFlags: 0
