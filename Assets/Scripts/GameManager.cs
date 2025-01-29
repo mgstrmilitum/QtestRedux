@@ -30,12 +30,13 @@ public class GameManager : MonoBehaviour
     public float lerpTimer;
 
     public GameObject damagePanel;
+    public GameObject interactButton;
 
     public GameObject player;
     public QMove playerScript;
 
     public bool isPaused = false;
-    int goalCount;
+    public int goalCount;
 
     // Start is called before the first frame update
     void Awake()

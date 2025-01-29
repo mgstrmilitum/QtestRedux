@@ -1,8 +1,9 @@
 fileFormatVersion: 2
-guid: ca2a72e1727404226a9166460e788ac7
+guid: ef8aa9455fb06d2438c1cb1eba9399f6
+timeCreated: 1571241036
+licenseType: Store
 TextureImporter:
-  fileIDToRecycleName:
-    8900000: generatedCubemap
+  fileIDToRecycleName: {}
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -30,12 +31,12 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 2
-    aniso: 0
-    mipBias: 0
-    wrapU: 1
-    wrapV: 1
-    wrapW: 1
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapU: -1
+    wrapV: -1
+    wrapW: -1
   nPOTScale: 1
   lightmap: 0
   compressionQuality: 50
@@ -77,8 +78,8 @@ TextureImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 119922
-  packageName: PUN 2 - FREE
-  packageVersion: 2.49
-  assetPath: Assets/Photon/PhotonUnityNetworking/Demos/DemoSlotRacer/SlotCar-Scene/ReflectionProbe-0.exr
-  uploadId: 722643
+  productId: 165785
+  packageName: Melee Warrior Animations FREE
+  packageVersion: 1.2
+  assetPath: Assets/Kevin Iglesias/Melee Warrior Animations/Textures/MeleeWarriorFloor.png
+  uploadId: 723518
