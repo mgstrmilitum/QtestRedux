@@ -19,7 +19,7 @@ public class Items : MonoBehaviour , IPickup
     {
         //checking if the object that entered is the player
         if (other.isTrigger) { return; }
-        playerController player = other.transform.GetComponent<playerController>();
+        QMove player = other.transform.GetComponent<QMove>();
         GunScript1 gun= other.transform.GetComponent<GunScript1>();
         if (player != null || gun!=null)
         {

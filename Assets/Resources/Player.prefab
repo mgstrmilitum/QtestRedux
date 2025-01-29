@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 2825886691318395962}
   - component: {fileID: 1133816541214925000}
   - component: {fileID: 1722279610935275336}
-  - component: {fileID: 1722279610935275336}
   - component: {fileID: -3733195145495670568}
   - component: {fileID: 1993068054493120479}
   m_Layer: 3
@@ -185,9 +184,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 2445905331302951609}
   playerView: {fileID: 1940071780379279629}
-  health: 100
-  maxShield: 100
-  currentShield: 0
   gravity: 20
   friction: 6
   xMouseSensitivity: 2
@@ -202,10 +198,97 @@ MonoBehaviour:
   sideStrafeSpeed: 1
   jumpSpeed: 8
   holdJumpToBhop: 0
+  invertLook: 0
   playerFriction: 1
-  shieldActive: 1
-  playerTopVelocity: 10
   wishJump: 0
+  playerVelocity: {x: 0, y: 0, z: 0}
+  playerTopVelocity: 10
+  crouchSpeedFactor: 0
+  crouchScaleFactor: 0
+  sprintSpeedFactor: 0
+  shieldActive: 1
+  health: 100
+  maxShield: 100
+  currentShield: 0
+  healthLerpSpeed: 0
+  playerHealthBar: {fileID: 0}
+  playerHealthBarBack: {fileID: 0}
+  playerShieldBar: {fileID: 0}
+  playerShieldBarBack: {fileID: 0}
+  lossSpeed: 2
+  lerpTimer: 0
+  shootDamage: 0
+  shootDistance: 0
+  shootRate: 0
+  gunModel: {fileID: 0}
+  fpsDisplayRate: 4
+  style:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
 --- !u!82 &-3733195145495670568
 AudioSource:
   m_ObjectHideFlags: 0
@@ -343,11 +426,17 @@ MonoBehaviour:
   health: 100
   maxShield: 100
   currentShield: 0
+  healthLerpSpeed: 0
+  playerHealthBar: {fileID: 0}
+  playerHealthBarBack: {fileID: 0}
+  playerShieldBar: {fileID: 0}
+  playerShieldBarBack: {fileID: 0}
+  lossSpeed: 2
+  lerpTimer: 0
   shootDamage: 0
   shootDistance: 0
   shootRate: 0
   gunModel: {fileID: 0}
-  gunList: []
   fpsDisplayRate: 4
   style:
     m_Name: 
@@ -465,37 +554,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectWeapon_: 0
---- !u!1 &3941182831071302304
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4152580975055733206}
-  m_Layer: 0
-  m_Name: ShootPos
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4152580975055733206
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3941182831071302304}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.7096407, y: -0.004536723, z: -0.0046434943, w: 0.7045339}
-  m_LocalPosition: {x: -0.022198193, y: -0.32419294, z: 0.061662458}
-  m_LocalScale: {x: 2, y: 2, z: 2}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8419702058694399337}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6783400371461297178
 GameObject:
   m_ObjectHideFlags: 0
@@ -727,7 +785,7 @@ PrefabInstance:
     - target: {fileID: 8098497648038191547, guid: f467c5c250cf8cd4688309d8d3dfe440, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: d20ab871c62edf04facff84d4ce183b5, type: 2}
+      objectReference: {fileID: 2100000, guid: 99fced4bc2985174cac8512dc765d2bc, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -749,7 +807,7 @@ PrefabInstance:
     - target: {fileID: 3984840722986969900, guid: a98809541db453947a6551901aee5757, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 6f1a3abc3e476eb4f823f1ab4687b4ed, type: 2}
+      objectReference: {fileID: 2100000, guid: 99fced4bc2985174cac8512dc765d2bc, type: 2}
     - target: {fileID: 7207030652340083936, guid: a98809541db453947a6551901aee5757, type: 3}
       propertyPath: m_Name
       value: BustRifle
@@ -819,11 +877,11 @@ PrefabInstance:
     - target: {fileID: 3125811488743320931, guid: a5724d8ec1468e541a6a28287bddd588, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 6f1a3abc3e476eb4f823f1ab4687b4ed, type: 2}
+      objectReference: {fileID: 2100000, guid: cceec12884c418c4bb19cef32dc2abc1, type: 2}
     - target: {fileID: 5181788701696400741, guid: a5724d8ec1468e541a6a28287bddd588, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 6f1a3abc3e476eb4f823f1ab4687b4ed, type: 2}
+      objectReference: {fileID: 2100000, guid: cceec12884c418c4bb19cef32dc2abc1, type: 2}
     - target: {fileID: 7058931505830666078, guid: a5724d8ec1468e541a6a28287bddd588, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.0927271
@@ -870,7 +928,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8658565331076405935, guid: a5724d8ec1468e541a6a28287bddd588, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -893,7 +951,11 @@ PrefabInstance:
     - target: {fileID: 230323761114741755, guid: 81ba8d5f4f18ca84f8f63ed91dbccece, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 6f1a3abc3e476eb4f823f1ab4687b4ed, type: 2}
+      objectReference: {fileID: -4531039458786148478, guid: 262b56617534b1a4f877b0815581ac1d, type: 3}
+    - target: {fileID: 6452937539253426826, guid: 81ba8d5f4f18ca84f8f63ed91dbccece, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 4935174470242364073}
     - target: {fileID: 7418552227745370480, guid: 81ba8d5f4f18ca84f8f63ed91dbccece, type: 3}
       propertyPath: m_Name
       value: Rocket launcher
@@ -947,6 +1009,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81ba8d5f4f18ca84f8f63ed91dbccece, type: 3}
+--- !u!23 &4935174470242364073 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8796119790846988049, guid: 81ba8d5f4f18ca84f8f63ed91dbccece, type: 3}
+  m_PrefabInstance: {fileID: 4498914956156642744}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5068971457696959733 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8662605712804260173, guid: 81ba8d5f4f18ca84f8f63ed91dbccece, type: 3}
