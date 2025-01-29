@@ -6,6 +6,11 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("-----Timer-----")]
+    [SerializeField] bool timerOn;
+    [SerializeField] float timeLeft;
+    [SerializeField] TMP_Text timerText;
+
     public static GameManager Instance;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
@@ -18,7 +23,11 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] TMP_Text goalCountText;
     public Image playerHealthBar;
+    public Image playerHealthBarBack;
     public Image playerShieldBar;
+    public Image playerShieldBarBack;
+    public float lossSpeed;
+    public float lerpTimer;
 
     public GameObject damagePanel;
 
@@ -32,6 +41,9 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+
+        timerOn = true;
+
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<QMove>();
 
@@ -42,6 +54,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        TimerLogic();
+
         if (Input.GetButtonDown("Cancel"))
         {
             if (menuActive == null)
@@ -103,4 +117,35 @@ public class GameManager : MonoBehaviour
         menuActive.SetActive(true);
         //THINK ABOUT CONDENSING THESE FUNCTIONS
     }
+
+    public void TimerLogic()
+    {
+        if (timerOn)
+        {
+            if(timeLeft > 0)
+            {
+                timeLeft -= Time.deltaTime;
+                UpdateTimer(timeLeft);
+            }
+            else
+            {
+                timeLeft = 0;
+                timerOn = false;
+                timerText.text = string.Format("{0:00} : {1:00}", 0f, 0f);
+                YouLose();
+            }
+        }
+    }
+
+    public void UpdateTimer(float currentTime)
+    {
+        currentTime += 1;
+
+        float minutes = Mathf.FloorToInt(currentTime / 60);
+        float seconds = Mathf.FloorToInt(currentTime % 60);
+        float milliseconds = (Mathf.FloorToInt(currentTime * 1000f)) % 1000;
+
+        timerText.text = string.Format("{0:00} : {1:00}",seconds, milliseconds);
+    }
 }
+

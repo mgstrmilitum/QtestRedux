@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
-
+using UnityEngine.UI;
+using TMPro;
 
 
 
@@ -72,6 +73,15 @@ public class QMove : MonoBehaviour, IDamage , IPickup
     public bool shieldActive;
     [SerializeField] int health;
     [SerializeField] int maxShield, currentShield;
+    [SerializeField] int healthLerpSpeed;
+    public Image playerHealthBar;
+    public Image playerHealthBarBack;
+    public Image playerShieldBar;
+    public Image playerShieldBarBack;
+    public float lossSpeed = 2;
+    public float lerpTimer;
+
+
 
     //camera rotations
     float rotX;
@@ -97,7 +107,10 @@ public class QMove : MonoBehaviour, IDamage , IPickup
     }
     void Update()
     {
-        if(GameManager.Instance.devMode)
+        ShieldBehavior();
+        UpdatePlayerUI();
+
+        if (GameManager.Instance.devMode)
         {
             ++frameCount;
             dt += Time.deltaTime;
@@ -109,7 +122,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup
                 dt -= 1f / fpsDisplayRate;
             }
         }
-        ShieldBehavior();
+      
         if (!GameManager.Instance.isPaused)
         {
             rotX -= Input.GetAxisRaw("Mouse Y") * xMouseSensitivity;
@@ -388,19 +401,21 @@ public class QMove : MonoBehaviour, IDamage , IPickup
 
     public void TakeDamage(int amount)
     {
+      
         if (shieldActive)
         {
             currentShield -= amount;
+            ShieldBehavior();
             if (currentShield <= 0)
             {
                 DeactivateShield();
             }
-            UpdatePlayerUI();
+            
             return;
         }
 
         health -= amount;
-        UpdatePlayerUI();
+        
 
 
         StartCoroutine(FlashDamagePanel());
@@ -411,8 +426,45 @@ public class QMove : MonoBehaviour, IDamage , IPickup
     }
     void UpdatePlayerUI()
     {
-        GameManager.Instance.playerHealthBar.fillAmount = (float)health / originalHealth;
-        GameManager.Instance.playerShieldBar.fillAmount = (float)currentShield / maxShield;
+
+        
+        float hFraction = (float)health / originalHealth;
+        float sFraction = (float)currentShield / maxShield;
+
+       
+            if (playerHealthBarBack.fillAmount > hFraction)
+            {
+                playerHealthBarBack.color = Color.red;
+                playerHealthBar.fillAmount = hFraction;
+                playerHealthBarBack.fillAmount = Mathf.Lerp(playerHealthBarBack.fillAmount, hFraction, Time.deltaTime * healthLerpSpeed);
+             }
+            if (playerHealthBar.fillAmount < hFraction)
+            {
+                playerHealthBarBack.color = Color.green;
+                playerHealthBarBack.fillAmount = hFraction;
+
+                playerHealthBar.fillAmount = Mathf.Lerp(playerHealthBar.fillAmount, hFraction, Time.deltaTime * healthLerpSpeed);
+            }
+        
+        
+        
+            if (playerShieldBarBack.fillAmount > sFraction)
+            {
+                playerShieldBarBack.color = Color.red;
+                playerShieldBar.fillAmount = sFraction;
+                playerShieldBarBack.fillAmount = Mathf.Lerp(playerShieldBarBack.fillAmount, sFraction, Time.deltaTime * healthLerpSpeed);
+            }
+            if (playerShieldBar.fillAmount < sFraction)
+            {
+                playerShieldBarBack.color = Color.green;
+                playerShieldBarBack.fillAmount = sFraction;
+
+                playerShieldBar.fillAmount = Mathf.Lerp(playerShieldBar.fillAmount, sFraction, Time.deltaTime * healthLerpSpeed);
+            }
+     
+
+
+       
     }
     void DeactivateShield()
     {
@@ -447,6 +499,9 @@ public class QMove : MonoBehaviour, IDamage , IPickup
    public void AddHealth(int amount)
     {
         health += amount;
+        lerpTimer = 0;
+
+
         if (health > 100) { health = 100; }
         UpdatePlayerUI();
     }
@@ -471,5 +526,19 @@ public void AssignSettings()
         xMouseSensitivity = PlayerPrefs.GetFloat("mouseSens", 2);
         yMouseSensitivity = PlayerPrefs.GetFloat("mouseSens", 2);
         invertLook = (PlayerPrefs.GetInt("invertAxis", 0) != 0);
+    }
+
+    IEnumerator HealthBarLerp(float healthFill, float duration)
+    {
+        float time = 0;
+        while (time < duration)
+        {
+
+            playerHealthBarBack.fillAmount = Mathf.Lerp(playerHealthBarBack.fillAmount, healthFill, (time / duration));
+
+            time += Time.deltaTime;
+            yield return null; 
+        }
+        playerHealthBarBack.fillAmount = healthFill;
     }
 }
