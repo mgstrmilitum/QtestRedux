@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Levels/Level1/NavMesh-NavMeshSurface 1.asset.meta
+guid: 24d431894a87a0a49a82bf3c339f7a85
+========
+guid: 646bb72d6f67e0e458b1e325d5f543a5
+>>>>>>>> LightChristinzioBranch:Assets/Levels/Level1/NavMesh-NavMeshSurface.asset.meta
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 23800000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
