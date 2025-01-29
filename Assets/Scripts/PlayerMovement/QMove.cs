@@ -34,9 +34,13 @@ struct AmmoCount
 
 public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
 {
+    [Header("Components")]
     //movement/control related
     public CharacterController controller;
     [SerializeField] Transform playerView;
+    [SerializeField] AudioSource aud;
+
+    [Header("Movement Vars")]
     [SerializeField] float gravity = 20f;
     [SerializeField] float friction = 6f;
     [SerializeField] public float xMouseSensitivity = 2f;
@@ -51,9 +55,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
     [SerializeField] float sideStrafeSpeed = 1f;
     [SerializeField] float jumpSpeed = 8f;
     [SerializeField] bool holdJumpToBhop = false;
-
     [SerializeField] public bool invertLook = false;
-
     [SerializeField] float playerFriction = 0f;
     public bool wishJump = false;
     Vector3 moveDirectionNorm = Vector3.zero;
@@ -65,7 +67,12 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
     [SerializeField] float sprintSpeedFactor; //2 doubles run speed, 4 quadruples, etc
     bool isSliding = false;
 
+    //camera rotations
+    float rotX;
+    float rotY;
 
+
+    [Header("Player Stats")]
     //health/shield info
     int originalHealth;
     public bool shieldActive;
@@ -77,12 +84,16 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
     [SerializeField] float shootRate;
     [SerializeField] GameObject gunModel;
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
-
     int gunListPos;
 
-    //camera rotations
-    float rotX;
-    float rotY;
+    [Header("Audio")]
+    [SerializeField] AudioClip[] audSteps;
+    [SerializeField][Range(0, 1)] float audStepsVol;
+    [SerializeField] AudioClip[] audHurt;
+    [SerializeField][Range(0, 1)] float audHurtVol;
+    [SerializeField] AudioClip[] audJump;
+    [SerializeField][Range(0, 1)] float audJumpVol;
+
 
     //dev mode variables
     int frameCount = 0;
@@ -295,11 +306,13 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
         if(Input.GetButton("Sprint"))
         {
             wishspeed *= sprintSpeedFactor;
+            audStepsVol *= 2;
         }
 
         if (Input.GetButtonUp("Sprint"))
         {
             wishspeed /= sprintSpeedFactor;
+            audStepsVol /= 2;
         }
 
         #endregion
@@ -308,15 +321,15 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
         if (Input.GetButton("Crouch"))
         {
             wishspeed /= crouchSpeedFactor;
+            audStepsVol /= 2;
             controller.height = crouchScaleFactor;
-            Debug.Log("Crouching!");
 
         }
         if (Input.GetButtonUp("Crouch"))
         {
             wishspeed *= crouchSpeedFactor;
+            audStepsVol *= 2;
             controller.height = 2f;
-            Debug.Log("Standing again!");
         }
         #endregion
 
@@ -329,6 +342,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
         if (wishJump)
         {
             playerVelocity.y = jumpSpeed;
+            aud.PlayOneShot(audJump[Random.Range(0, audJump.Length)], audJumpVol);
             wishJump = false;
         }
     }
@@ -405,6 +419,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
         if (shieldActive)
         {
             currentShield -= amount;
+            aud.PlayOneShot(audHurt[Random.Range(0, audHurt.Length)], audHurtVol);
             if (currentShield <= 0)
             {
                 DeactivateShield();
@@ -414,6 +429,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
         }
 
         health -= amount;
+        aud.PlayOneShot(audHurt[Random.Range(0, audHurt.Length)], audHurtVol);
         UpdatePlayerUI();
 
 
