@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RocketExplosion : MonoBehaviour
@@ -8,12 +9,28 @@ public class RocketExplosion : MonoBehaviour
     public LayerMask explosionLayers;
     public ParticleSystem Boom;
     public int blastDamage;
+    [SerializeField] SphereCollider KboomCollider;
     [SerializeField] LayerMask whatISEnemy;
+   
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log(collision.contacts[0].point.ToString());
+
+        if (collision.gameObject.GetComponent<EnemyAI>() != null)
+        {
+            collision.gameObject.GetComponent<EnemyAI>().TakeDamage(blastDamage);
+            Destroy(collision.gameObject);
+            KboomCollider.enabled=true;
+            MeshRenderer meshrenderr= this.GetComponent<MeshRenderer>();
+            meshrenderr.enabled=false;
+            MeshFilter meshfilterrr = this.GetComponent<MeshFilter>();
+            Destroy(meshfilterrr);
+            Boom= Instantiate(Boom, collision.contacts[0].point, Quaternion.identity);//Boom at this exact spot!
+            Destroy(Boom, 2f);
+        }
+
     }
-  
+
     void OnExplosion(Vector3 explosionPoint)
     {
         hitColliders = Physics.OverlapSphere(explosionPoint, blastRadius, explosionLayers);
@@ -31,7 +48,10 @@ public class RocketExplosion : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-       
+       if(other.isTrigger)
+        {
+            return;
+        }
        if(other.GetComponent<EnemyAI>() != null)
        {other.GetComponent<EnemyAI>().TakeDamage(blastDamage);
         Destroy(other.gameObject);
@@ -39,4 +59,9 @@ public class RocketExplosion : MonoBehaviour
             
         
     }
+    void Boommethod()
+    {
+
+    }
+ 
 }
