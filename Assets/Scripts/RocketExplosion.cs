@@ -14,7 +14,8 @@ public class RocketExplosion : MonoBehaviour
    
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.contacts[0].point.ToString());
+        Debug.Log(collision.contacts[0].point.ToString()); Boom= Instantiate(Boom, collision.contacts[0].point, Quaternion.identity);//Boom at this exact spot!
+            Destroy(Boom, 2f);
 
         if (collision.gameObject.GetComponent<EnemyAI>() != null)
         {
@@ -25,8 +26,7 @@ public class RocketExplosion : MonoBehaviour
             meshrenderr.enabled=false;
             MeshFilter meshfilterrr = this.GetComponent<MeshFilter>();
             Destroy(meshfilterrr);
-            Boom= Instantiate(Boom, collision.contacts[0].point, Quaternion.identity);//Boom at this exact spot!
-            Destroy(Boom, 2f);
+           
         }
 
     }
