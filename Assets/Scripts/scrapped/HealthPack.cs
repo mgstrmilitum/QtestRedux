@@ -19,7 +19,7 @@ public class HealthPack : MonoBehaviour , IPickup
         {
             return;
         }
-            QMove player = other.transform.GetComponent<QMove>();
+            playerController player = other.transform.GetComponent<playerController>();
 
             if (player != null)
             {

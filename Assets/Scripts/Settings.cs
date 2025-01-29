@@ -14,7 +14,7 @@ public class Settings : MonoBehaviour
     public float musicVolume;
     public bool invertAxis;
  
-    public QMove player; 
+    public playerController player; 
 
     public UnityEngine.UI.Slider sensSlider;
     public UnityEngine.UI.Slider volumeSlider;

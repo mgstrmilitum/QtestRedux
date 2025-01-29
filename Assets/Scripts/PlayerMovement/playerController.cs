@@ -33,8 +33,8 @@ public class playerController : MonoBehaviour, IDamage, IOpen
     [SerializeField] float shootRate;
     [SerializeField] Material mat;
     [SerializeField] AudioSource aud;
-    [SerializeField] float xMouseSensitivity;
-    [SerializeField] float yMouseSensitivity;
+    [SerializeField] public float xMouseSensitivity;
+    [SerializeField] public float yMouseSensitivity;
     float rotX;
     float rotY;
     [SerializeField] Transform playerView;
@@ -69,7 +69,7 @@ public class playerController : MonoBehaviour, IDamage, IOpen
     bool hasQuad;
     public bool hasInvis;
     bool isPaused = false;
-    bool invertLook = false;
+    public bool invertLook = false;
 
     Color myColor;
 
@@ -399,6 +399,23 @@ public class playerController : MonoBehaviour, IDamage, IOpen
         gunList.Add(gun); //add a check to make sure we don't already have this gun
         gunListPos = gunList.Count - 1;
         //ChangeGun();
+    }
+
+    internal void AddHealth(int amount)
+    {
+        health+= amount;
+        if (health >100)
+        {
+           health = 100;
+        }
+        UpdatePlayerUI();
+    }
+
+    internal void AssignSettings()
+    {
+        xMouseSensitivity = PlayerPrefs.GetFloat("mouseSens",2);
+        yMouseSensitivity=  PlayerPrefs.GetFloat("mouseSens", 2);
+        invertLook= (PlayerPrefs.GetInt("invertAxis",0)!=0);
     }
 
     //void SelectGun()

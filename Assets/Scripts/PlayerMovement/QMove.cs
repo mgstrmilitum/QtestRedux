@@ -31,7 +31,7 @@ struct AmmoCount
     public int numCells;
 }
 
-public class QMove : MonoBehaviour, IDamage, IPickup
+public class QMove : MonoBehaviour, IDamage//, IPickup
 {
     //movement/control related
     public CharacterController controller;
@@ -496,4 +496,9 @@ public class QMove : MonoBehaviour, IDamage, IPickup
         GUI.Label(new Rect(0, 15, 400, 100), "Speed: " + Mathf.Round(ups.magnitude * 100) / 100 + "ups", style);
         GUI.Label(new Rect(0, 30, 400, 100), "Top Speed: " + Mathf.Round(playerTopVelocity * 100) / 100 + "ups", style);
     }
+
+    //public void OnPickup(Collider other)
+    //{
+
+    //}
 }
