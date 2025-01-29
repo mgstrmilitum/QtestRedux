@@ -88,7 +88,6 @@ public class playerController : MonoBehaviour, IDamage, IOpen
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(controller.isGrounded);
         if (!GameManager.Instance.isPaused)
         {
 

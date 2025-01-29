@@ -18,8 +18,11 @@ public class Damage : MonoBehaviour
     [SerializeField] int speed;
     [SerializeField] int destroyTime;
 
+    public bool isAttacking;
+
     void Start()
     {
+        isAttacking = false;
         rb.linearVelocity = transform.forward * speed;
         if (type == DamageType.Moving)
         {

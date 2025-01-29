@@ -30,8 +30,8 @@ public class MovingObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //if (other.gameObject.CompareTag("Player"))
-        //    other.transform.SetParent(transform);
+        if (other.gameObject.CompareTag("Player"))
+            other.transform.SetParent(transform);
     }
 
     private void OnTriggerExit(Collider other)

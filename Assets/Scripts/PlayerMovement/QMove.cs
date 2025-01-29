@@ -190,6 +190,7 @@ public class QMove : MonoBehaviour, IDamage, IPickup
         float wishVelo = airAcceleration;
         float accel;
 
+        //player input
         SetMovementDir();
 
         wishdir = new Vector3(cmd.rightMove, 0, cmd.forwardMove);
@@ -273,6 +274,7 @@ public class QMove : MonoBehaviour, IDamage, IPickup
     {
         Vector3 wishdir;
 
+        //Makes frame perfect b-hop possible
         if(!wishJump)
         {
             ApplyFriction(1f);
@@ -349,7 +351,7 @@ public class QMove : MonoBehaviour, IDamage, IPickup
         if(controller.isGrounded)
         {
             control = speed < runDeacceleration ? runDeacceleration : speed;
-            drop = control * friction * t * Time.deltaTime;
+            drop = control * friction * t * Time.deltaTime; //ie, speed drop
         }
 
         newspeed = speed - drop;
@@ -376,6 +378,7 @@ public class QMove : MonoBehaviour, IDamage, IPickup
 
         //projection of player velocity onto wishdir
         currentspeed = Vector3.Dot(playerVelocity, wishdir);
+
         //amount to increase velocity
         addspeed = wishspeed - currentspeed;
 

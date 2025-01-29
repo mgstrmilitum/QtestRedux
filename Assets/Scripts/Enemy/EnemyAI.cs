@@ -18,6 +18,7 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
     [SerializeField] float meleeRate;
+    [SerializeField] float meleeAttackDistance;
     [SerializeField] public NavMeshAgent agent;
     [SerializeField] int faceTargetSpeed;
     [SerializeField] int fov;
@@ -81,6 +82,7 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
 
     IEnumerator Roam()
     {
+        Debug.Log("Now roaming!");
         isRoaming = true;
 
         yield return new WaitForSeconds(roamPauseTime);
@@ -111,14 +113,16 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
                 {
                     FaceTarget();
                 }
+
                 if (!isShooting && enemyType != EnemyType.Melee)
                 {
                     StartCoroutine(Shoot());
 
                 }
-                else if(!isMelee && enemyType == EnemyType.Melee)
+                else if(enemyType == EnemyType.Melee && Vector3.Distance(GameManager.Instance.player.transform.position, transform.position) <= meleeAttackDistance)
                 {
-
+                    agent.SetDestination(transform.position);
+                    StartCoroutine(Melee());
                 }
 
                 agent.stoppingDistance = stoppingDistanceOrig;
@@ -146,7 +150,10 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     public void TakeDamage(int amount)
     {
         hp -= amount;
-
+        if(enemyType == EnemyType.Melee)
+        {
+            animatorController.SetTrigger("Damage");
+        }
         agent.SetDestination(GameManager.Instance.player.transform.position);
         if(co != null)
         {
@@ -173,19 +180,15 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     {
         isShooting = true;
         GameObject obj = Instantiate(bullet, shootPos.position, transform.rotation);
-        if (enemyType == EnemyType.Grenade)
-        {
-            //add short-medium-long range speeds based on distance between
-            //AI and character??
-            obj.GetComponent<Rigidbody>().AddForce(Vector3.forward * grenadeSpeed, ForceMode.Impulse);
-        }
         yield return new WaitForSeconds(shootRate);
         isShooting = false;
     }
 
     IEnumerator Melee()
     {
+        Debug.Log(agent.remainingDistance);
         isMelee = true;
+        animatorController.SetTrigger("Attack");
         yield return new WaitForSeconds(meleeRate);
         isMelee = false;
     }

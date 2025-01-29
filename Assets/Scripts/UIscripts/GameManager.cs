@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     public GameObject damagePanel;
 
     public GameObject player;
-    public QMove playerScript;
+    public playerController playerScript;
 
     public bool isPaused = false;
     int goalCount;
@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         player = GameObject.FindWithTag("Player");
-        playerScript = player.GetComponent<QMove>();
+        playerScript = player.GetComponent<playerController>();
 
         Time.timeScale = 1f;
         
