@@ -11,5 +11,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Levels/Level1.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Levels/Campaign.unity
+    guid: 46631808d15ab35419e1c0ebc8db6918
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

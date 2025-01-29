@@ -5,6 +5,7 @@ DefaultImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+<<<<<<< Updated upstream
 AssetOrigin:
   serializedVersion: 1
   productId: 181883
@@ -12,3 +13,5 @@ AssetOrigin:
   packageVersion: 2.0.2
   assetPath: Assets/Polytope Studio/Lowpoly_Characters/URP/PT_Skeleton_URP_12.unitypackage
   uploadId: 721450
+=======
+>>>>>>> Stashed changes

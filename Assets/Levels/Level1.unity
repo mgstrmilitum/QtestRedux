@@ -6024,8 +6024,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d02292f61f2d3704e8e2e435f2afd6eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.3
-  targetPos: {x: 20.5, y: -1, z: 24.5}
+  speed: 0
+  targetPos: {x: 0, y: 0, z: 0}
 --- !u!54 &517801732
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6065,12 +6065,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7c6f1e34f2101c48af056ccca92ec43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 1
-  rb: {fileID: 517801732}
+  type: 0
+  rb: {fileID: 0}
   meleeAI: {fileID: 0}
+<<<<<<< Updated upstream
   damageAmount: 1
   speed: 0
   destroyTime: 0
+=======
+  isLava: 0
+  damageAmount: 0
+  speed: 0
+  destroyTime: 0
+  damageDelay: 0
+>>>>>>> Stashed changes
   isAttacking: 0
 --- !u!65 &517801734
 BoxCollider:
@@ -9155,6 +9163,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+<<<<<<< Updated upstream
+=======
+    - target: {fileID: 1993068054493120479, guid: e93a27b599dfd3547ab4402ce870bc4c, type: 3}
+      propertyPath: healthLerpSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993068054493120479, guid: e93a27b599dfd3547ab4402ce870bc4c, type: 3}
+      propertyPath: playerHealthBar
+      value: 
+      objectReference: {fileID: 809382892}
+    - target: {fileID: 1993068054493120479, guid: e93a27b599dfd3547ab4402ce870bc4c, type: 3}
+      propertyPath: playerShieldBar
+      value: 
+      objectReference: {fileID: 2049260745}
+    - target: {fileID: 1993068054493120479, guid: e93a27b599dfd3547ab4402ce870bc4c, type: 3}
+      propertyPath: playerHealthBarBack
+      value: 
+      objectReference: {fileID: 1094936710}
+    - target: {fileID: 1993068054493120479, guid: e93a27b599dfd3547ab4402ce870bc4c, type: 3}
+      propertyPath: playerShieldBarBack
+      value: 
+      objectReference: {fileID: 1292734762}
+>>>>>>> Stashed changes
     - target: {fileID: 3014391980535225446, guid: e93a27b599dfd3547ab4402ce870bc4c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.87
@@ -9199,10 +9230,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+<<<<<<< Updated upstream
     - target: {fileID: 6925878346033387073, guid: e93a27b599dfd3547ab4402ce870bc4c, type: 3}
       propertyPath: shootRate
       value: 5
       objectReference: {fileID: 0}
+=======
+>>>>>>> Stashed changes
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16942,10 +16976,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7c6f1e34f2101c48af056ccca92ec43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 1
-  rb: {fileID: 1530125504}
+  type: 0
+  rb: {fileID: 0}
   meleeAI: {fileID: 0}
+<<<<<<< Updated upstream
   damageAmount: 1
+=======
+  isLava: 0
+  damageAmount: 0
+>>>>>>> Stashed changes
   speed: 0
   destroyTime: 0
   isAttacking: 0
@@ -17050,8 +17089,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d02292f61f2d3704e8e2e435f2afd6eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.3
-  targetPos: {x: 20.5, y: -1, z: -22.5}
+  speed: 0
+  targetPos: {x: 0, y: 0, z: 0}
 --- !u!4 &1535551579 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2401807200770592866, guid: dd63ce7bb5813164580c9b9fa74e8208, type: 3}
@@ -17389,6 +17428,14 @@ Transform:
   - {fileID: 164985274}
   m_Father: {fileID: 878560320}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< Updated upstream
+=======
+--- !u!82 &1565823288 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: -3733195145495670568, guid: e93a27b599dfd3547ab4402ce870bc4c, type: 3}
+  m_PrefabInstance: {fileID: 772484537}
+  m_PrefabAsset: {fileID: 0}
+>>>>>>> Stashed changes
 --- !u!1001 &1569370337
 PrefabInstance:
   m_ObjectHideFlags: 0
