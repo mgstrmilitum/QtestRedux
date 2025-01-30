@@ -9,7 +9,7 @@ public class GunScript1 : MonoBehaviour
     public float FireCooldown;
     public float Damage;
     public float BulletRange;
-     float AmmoShot, Ammoleft;
+    public float AmmoShot, Ammoleft;
     [SerializeField] Renderer model;
     Color colorOrginal;
     public GameObject impactEffect;
@@ -77,11 +77,13 @@ public class GunScript1 : MonoBehaviour
     }
     public void MiniShoot()
     {
+
+
         mussleflash.Play();
 
         RaycastHit fired;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out fired, BulletRange))
-        {   MagaizeSize--;
+        {   Ammoleft--;
             bulletSHot++;
             IDamage dmg = fired.collider.GetComponent<IDamage>();
             if (dmg!=null)

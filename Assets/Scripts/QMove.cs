@@ -82,11 +82,14 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
     public float lerpTimer;
 
 
+
     //gun info
+    public GunScript1 activeGun;
     [SerializeField] int shootDamage;
     [SerializeField] int shootDistance;
     [SerializeField] float shootRate;
     [SerializeField] GameObject gunModel;
+    [SerializeField] public TMP_Text ammoCount;
     //[SerializeField] List<GunStats> gunList = new List<GunStats>();
 
     int gunListPos;
@@ -434,8 +437,9 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
     }
     void UpdatePlayerUI()
     {
-
         
+        ammoCount.text = activeGun.Ammoleft.ToString();
+
         float hFraction = (float)health / originalHealth;
         float sFraction = (float)currentShield / maxShield;
 

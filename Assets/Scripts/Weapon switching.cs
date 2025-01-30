@@ -3,6 +3,7 @@ using UnityEngine;
 public class Weaponswitching : MonoBehaviour
 {
     public int selectWeapon_ = 0;
+    [SerializeField] QMove playerObj;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -56,6 +57,7 @@ public class Weaponswitching : MonoBehaviour
             if ((i==selectWeapon_))
             {
                 weapon.gameObject.SetActive(true);
+                playerObj.activeGun = weapon.gameObject.GetComponent<GunScript1>();
             }
             else
             {

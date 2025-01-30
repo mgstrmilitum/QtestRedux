@@ -2789,7 +2789,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7378234869420681584}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
         m_MethodName: OpenLevel
         m_Mode: 3
@@ -2994,6 +2994,7 @@ MonoBehaviour:
   invertLook: 0
   playerFriction: 1
   wishJump: 0
+  playerVelocity: {x: 0, y: 0, z: 0}
   playerTopVelocity: 10
   crouchSpeedFactor: 0
   crouchScaleFactor: 0
@@ -3009,6 +3010,10 @@ MonoBehaviour:
   playerShieldBarBack: {fileID: 0}
   lossSpeed: 2
   lerpTimer: 0
+  shootDamage: 0
+  shootDistance: 0
+  shootRate: 0
+  gunModel: {fileID: 0}
   fpsDisplayRate: 4
   style:
     m_Name: 
