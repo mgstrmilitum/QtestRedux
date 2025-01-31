@@ -57,11 +57,9 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
                 break;
         }
         //COMMENT THIS LINE OUT ONCE SPAWNER IS ADDED
-        GameManager.Instance.UpdateGameGoal(1);
         originalColor = model.material.color;
         stoppingDistanceOrig = agent.stoppingDistance;
         startingPos = transform.position;
-        GetComponent<GameManager>().goalCount += 1;
     }
 
     // Update is called once per frame

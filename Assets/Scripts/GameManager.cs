@@ -16,10 +16,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuActive;
-    [SerializeField] AudioSource audioSource;
-    [SerializeField] float songTimer;
-    [SerializeField] float songLength;
-    [SerializeField] public bool devMode = false;
+    //[SerializeField] AudioSource audioSource;
+    //[SerializeField] float songTimer;
+    //[SerializeField] float songLength;
+    //[SerializeField] public bool devMode = false;
     
     [SerializeField] TMP_Text goalCountText;
     public Image playerHealthBar;
@@ -71,12 +71,12 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        songTimer += Time.deltaTime;
-        if (songTimer > songLength)
-        {
-            audioSource.Play();
-            songTimer = 0;
-        }
+        //songTimer += Time.deltaTime;
+        //if (songTimer > songLength)
+        //{
+        //    audioSource.Play();
+        //    songTimer = 0;
+        //}
     }
 
     public void StatePause()

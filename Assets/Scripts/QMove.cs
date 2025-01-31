@@ -39,6 +39,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
     //movement/control related
     public CharacterController controller;
     [SerializeField] Transform playerView;
+    [SerializeField] AudioSource aud;
     [SerializeField] float gravity = 20f;
     [SerializeField] float friction = 6f;
     [SerializeField] public float xMouseSensitivity = 2f;
@@ -81,8 +82,6 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
     public float lossSpeed = 2;
     public float lerpTimer;
 
-
-
     //gun info
     public GunScript1 activeGun;
     [SerializeField] int shootDamage;
@@ -98,6 +97,9 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
     float rotX;
     float rotY;
 
+    //audio stuff
+    [SerializeField] float audHurtVol;
+    [SerializeField] AudioClip[] audHurt;
     //dev mode variables
     int frameCount = 0;
     float dt = 0f;
@@ -121,18 +123,18 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
         ShieldBehavior();
         UpdatePlayerUI();
 
-        if (GameManager.Instance.devMode)
-        {
-            ++frameCount;
-            dt += Time.deltaTime;
+        //if (GameManager.Instance.devMode)
+        //{
+        //    ++frameCount;
+        //    dt += Time.deltaTime;
 
-            if(dt > 1.0 / fpsDisplayRate)
-            {
-                fps = Mathf.Round(frameCount / dt);
-                frameCount = 0;
-                dt -= 1f / fpsDisplayRate;
-            }
-        }
+        //    if(dt > 1.0 / fpsDisplayRate)
+        //    {
+        //        fps = Mathf.Round(frameCount / dt);
+        //        frameCount = 0;
+        //        dt -= 1f / fpsDisplayRate;
+        //    }
+        //}
       
         if (!GameManager.Instance.isPaused)
         {
@@ -412,7 +414,7 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
 
     public void TakeDamage(int amount)
     {
-      
+        aud.PlayOneShot(audHurt[Random.Range(0, audHurt.Length)], audHurtVol);
         if (shieldActive)
         {
             currentShield -= amount;
@@ -501,15 +503,15 @@ public class QMove : MonoBehaviour, IDamage , IPickup, IOpen
         }
     }
 
-    //Comment this function out if in Dev Mode!!!
-    private void OnGUI()
-    {
-        GUI.Label(new Rect(0, 0, 400, 100), "FPS: " + fps, style);
-        var ups = controller.velocity;
-        ups.y = 0;
-        GUI.Label(new Rect(0, 15, 400, 100), "Speed: " + Mathf.Round(ups.magnitude * 100) / 100 + "ups", style);
-        GUI.Label(new Rect(0, 30, 400, 100), "Top Speed: " + Mathf.Round(playerTopVelocity * 100) / 100 + "ups", style);
-    }
+    //Comment this function out if not in Dev Mode!!!
+    //private void OnGUI()
+    //{
+    //    GUI.Label(new Rect(0, 0, 400, 100), "FPS: " + fps, style);
+    //    var ups = controller.velocity;
+    //    ups.y = 0;
+    //    GUI.Label(new Rect(0, 15, 400, 100), "Speed: " + Mathf.Round(ups.magnitude * 100) / 100 + "ups", style);
+    //    GUI.Label(new Rect(0, 30, 400, 100), "Top Speed: " + Mathf.Round(playerTopVelocity * 100) / 100 + "ups", style);
+    //}
 
    public void AddHealth(int amount)
     {

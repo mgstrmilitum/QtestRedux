@@ -9,6 +9,7 @@ public class Rocketlancher : MonoBehaviour
     [SerializeField] Transform shootPos;
     public int boomDamage;
     public int rocketLoad;
+    public GunScript1 rocketGun;
     
     EnemyAI enemy;
 
