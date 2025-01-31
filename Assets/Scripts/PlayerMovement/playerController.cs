@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
-public class playerController : MonoBehaviour, IDamage, IOpen
+public class playerController : MonoBehaviour, IDamage, IOpen, IPickup
 {
     [Header("Components")]
     [SerializeField] CharacterController controller;
@@ -88,7 +88,6 @@ public class playerController : MonoBehaviour, IDamage, IOpen
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(controller.isGrounded);
         if (!GameManager.Instance.isPaused)
         {
 
@@ -114,6 +113,7 @@ public class playerController : MonoBehaviour, IDamage, IOpen
                 playerView.rotation = Quaternion.Euler(rotX, rotY, 0);
             }
             Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.blue);
+            SelectGun();
             Movement();
             Sprint();
             Crouch();
@@ -392,33 +392,33 @@ public class playerController : MonoBehaviour, IDamage, IOpen
     {
         gunList.Add(gun); //add a check to make sure we don't already have this gun
         gunListPos = gunList.Count - 1;
-        //ChangeGun();
+        ChangeGun();
     }
 
-    //void SelectGun()
-    //{
-    //    if (Input.GetAxis("Mouse ScrollWheel") > 0 && gunListPos < gunList.Count - 1) //possibly add scroll up to zero at this point
-    //    {
-    //        gunListPos++;
-    //        ChangeGun();
-    //    }
-    //    else if (Input.GetAxis("Mouse ScrollWheel") < 0 && gunListPos > 0)
-    //    {
-    //        gunListPos--;
-    //        ChangeGun();
-    //    }
-    //}
+    void SelectGun()
+    {
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 && gunListPos < gunList.Count - 1) //possibly add scroll up to zero at this point
+        {
+            gunListPos++;
+            ChangeGun();
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && gunListPos > 0)
+        {
+            gunListPos--;
+            ChangeGun();
+        }
+    }
 
-    //void ChangeGun()
-    //{
-    //    //change gun-related stats
-    //    shootDamage = gunList[gunListPos].shootDamage;
-    //    shootDistance = gunList[gunListPos].shootDistance;
-    //    shootRate = gunList[gunListPos].shootRate;
+    void ChangeGun()
+    {
+        //change gun-related stats
+        shootDamage = gunList[gunListPos].shootDamage;
+        shootDistance = gunList[gunListPos].shootDistance;
+        shootRate = gunList[gunListPos].shootRate;
 
-    //    //change the gun model
-    //    gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunListPos].model.GetComponent<MeshFilter>().sharedMesh;
-    //    gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunListPos].model.GetComponent<MeshRenderer>().sharedMaterial;
+        //change the gun model
+        gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunListPos].model.GetComponent<MeshFilter>().sharedMesh;
+        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunListPos].model.GetComponent<MeshRenderer>().sharedMaterial;
 
-    //}
+    }
 }
