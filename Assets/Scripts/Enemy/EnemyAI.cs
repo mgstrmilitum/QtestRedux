@@ -21,6 +21,7 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     [SerializeField] public NavMeshAgent agent;
     [SerializeField] int faceTargetSpeed;
     [SerializeField] int fov;
+    [SerializeField] int shootFOV;
     [SerializeField] int roamPauseTime;
     [SerializeField] Transform headPos;
     [SerializeField] Animator animatorController;
@@ -111,7 +112,7 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
                 {
                     FaceTarget();
                 }
-                if (!isShooting && enemyType != EnemyType.Melee)
+                if (!isShooting && enemyType != EnemyType.Melee && angleToPlayer <= shootFOV)
                 {
                     StartCoroutine(Shoot());
 
