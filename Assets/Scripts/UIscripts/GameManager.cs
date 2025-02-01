@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuActive;
 
-    [SerializeField] AudioSource audioSource;
+    //[SerializeField] AudioSource audioSource;
     [SerializeField] float songTimer;
     [SerializeField] float songLength;
 
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
         songTimer += Time.deltaTime;
         if (songTimer > songLength)
         {
-            audioSource.Play();
+            //audioSource.Play();
             songTimer = 0;
         }
     }
@@ -107,6 +107,5 @@ public class GameManager : MonoBehaviour
         StatePause();
         menuActive = menuLose;
         menuActive.SetActive(true);
-        //THINK ABOUT CONDENSING THESE FUNCTIONS
     }
 }

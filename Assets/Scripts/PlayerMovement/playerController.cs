@@ -182,7 +182,6 @@ public class playerController : MonoBehaviour, IDamage, IOpen, IPickup
             }
         }
 
-        //moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         moveDirection = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
 
         controller.Move(moveDirection * speed * Time.deltaTime);
@@ -243,9 +242,17 @@ public class playerController : MonoBehaviour, IDamage, IOpen, IPickup
     {
         if (Input.GetButtonDown("Crouch"))
         {
-            speed /= crouchMod;
-            isCrouching = true;
-            controller.height = 0.5f;
+            if(isSprinting)
+            {
+
+            }
+            else
+            {
+                speed /= crouchMod;
+                isCrouching = true;
+                controller.height = 0.5f;
+            }
+            
         }
         else if (Input.GetButtonUp("Crouch"))
         {

@@ -21,12 +21,12 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     [SerializeField] public NavMeshAgent agent;
     [SerializeField] int faceTargetSpeed;
     [SerializeField] int fov;
+    [SerializeField] int shootFOV;
     [SerializeField] int roamPauseTime;
     [SerializeField] Transform headPos;
     [SerializeField] Animator animatorController;
     [SerializeField] int animSpeedTrans;
     [SerializeField] int roamDistance;
-    [SerializeField] float grenadeSpeed;
 
     float angleToPlayer;
     float stoppingDistanceOrig;
@@ -46,7 +46,6 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     void Start()
     {
         //COMMENT THIS LINE OUT ONCE SPAWNER IS ADDED
-        GameManager.Instance.UpdateGameGoal(1);
         originalColor = model.material.color;
         stoppingDistanceOrig = agent.stoppingDistance;
         startingPos = transform.position;
@@ -111,7 +110,7 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
                 {
                     FaceTarget();
                 }
-                if (!isShooting && enemyType != EnemyType.Melee)
+                if (!isShooting && enemyType != EnemyType.Melee && angleToPlayer <= shootFOV)
                 {
                     StartCoroutine(Shoot());
 
@@ -173,12 +172,7 @@ public class EnemyAI : MonoBehaviour, IDamage, IOpen
     {
         isShooting = true;
         GameObject obj = Instantiate(bullet, shootPos.position, transform.rotation);
-        if (enemyType == EnemyType.Grenade)
-        {
-            //add short-medium-long range speeds based on distance between
-            //AI and character??
-            obj.GetComponent<Rigidbody>().AddForce(Vector3.forward * grenadeSpeed, ForceMode.Impulse);
-        }
+
         yield return new WaitForSeconds(shootRate);
         isShooting = false;
     }
