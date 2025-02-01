@@ -264,7 +264,6 @@ public class playerController : MonoBehaviour, IDamage, IOpen, IPickup
 
         if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDistance, ~ignoreMask))
         {
-            Debug.Log("Hit a " + hit.collider.name + "!");
             Instantiate(gunList[gunListPos].hitEffect, hit.point, Quaternion.identity);
 
             IDamage dmg = hit.collider.GetComponent<IDamage>();
